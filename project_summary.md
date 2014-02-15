@@ -1,29 +1,23 @@
-# Project Title
-Insert the name of your project
+# Bloom
 
-## Authors
-- Insert main author name, surname, github account
-- Insert other author(s) name, surname, github account (one per list element)
+## Author
+* Robert Allison - http://github.com/rob-allison
 
 ## Description
-Insert a description containing about 100 to 150 words, including your motivation and the meaning behind your idea and execution. The Judges will be keen to know how your idea pushes the boundaries of code and technology. 
+By using a kind of 'binary dna' to create individual colours I have been able to escape from the familiar RGB/HSV colour model and treat colour as the expression of a process. Previous experimentation can be found here:
 
-## Link to Prototype
-NOTE: If your project lives online you can add one or more links here. Make sure you have a stable version of your project running before linking it.
+[Robert Allison](http://www.robertallison.co.uk "Robert Allison")
 
-[Example Link](http://www.google.com "Example Link")
+The themes I want to explore are:
+* growth - how a simple genetic sequence is translated into a complex structure.
+* breeding - how two sequences combine to produce a third that expresses characteristics from its parents.
+* selection - how a population as a whole evolves under a selection pressure
 
-## Example Code
-NOTE: Wrap your code blocks or any code citation by using ``` like the example below.
-```
-function test() {
-  console.log("Printing a test");
-}
-```
-## Links to External Libraries
- NOTE: You can also use this space to link to external libraries or Github repositories you used on your project.
+Underpinning all this is an effort to show how something almost natural can emerge from the purely computational when iterated to sufficiant scale.
 
-[Example Link](http://www.google.com "Example Link")
+I propose to determine a method of constructing something resembling a flower, using 'binary dna' as input. There would be a population of such flowers. Visitors would be able to select flowers to breed together, the resulting offspring then added to the population. Flowers would have a lifespan, and would be removed after a certain time. This changing population would be displayed with a suitable taxonomy.
+
+Hence the exhibit would evolve according to the preferences of visitors, with potential for effects, for example speciation, that can be found in the natural world. 
 
 ## Images & Videos
 NOTE: For additional images you can either use a relative link to an image on this repo or an absolute link to an externally hosted image.
