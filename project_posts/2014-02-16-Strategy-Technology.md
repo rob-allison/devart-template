@@ -10,7 +10,7 @@ The second is the generation, storage, and presentation of a population of such 
 
 The generation and storage of a population is an ideal use case for cloud services, eg Google Compute Engine and Cloud Storage. Presentation tasks such as arranging into a taxonomy and handling interaction are best done on the client side, within the browser or with native apps. With computation occuring on both server and client side, it would be nice to use the same language for both - Dart would fit the bill, as it can be run on the server with DartVM and also on the client via Javascript (or directly with Dartium).
 
-
+![Cloud/Clients](../project_images/cloudclient.jpg?raw=true "Cloud/Clients")
 
 
 
