@@ -4,7 +4,7 @@ There are two major challenges in realising the proposal:
 
 The first is to design a flower growth process that produces digital 'flowers' that have both the complexity and aesthetic qualities we would associate with living organisms, yet are true to their digital roots. The aim here is not to imitate what can already be found in nature, but to find a digital analogy.
 
-The second is the generation, storage, and presentation of a population of such flowers. The population needs to be persistant, subject to a 'die-off' process, and may be accessed from anywhere. The creation of new individuals should be protected so they follow the process designed above. Presentation should suggest a taxonomy or at least some attempt to classify individuals in the population. Visitors will need to be able to interact with the population.
+The second is the generation, storage, and presentation of/interaction with a population of such flowers. The population needs to be persistant, subject to a 'die-off' process, and may be accessed from anywhere. The creation of new individuals should be protected so they follow the process designed above. Presentation should suggest a taxonomy or at least some attempt to classify individuals in the population. Visitors will need to be able to interact with the population.
 
 ## Technology
 
