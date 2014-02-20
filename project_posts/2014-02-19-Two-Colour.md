@@ -7,7 +7,7 @@ used colour variation instead of lines and shapes to structure my images.
 within an individual and across a population.
 
 Rotational symmetry and variation from centre to periphery are two characteristics of flowers that can translate to
-digital productions and will anchor viewers' understanding.
+digital productions and will anchor viewers' understanding. Something like this can be achieved with two coloured squares:
 
 ![A population of simple 2 colour flower analogues](../project_images/pop2col.jpg?raw=true "A population of simple 2 colour flower analogues")
 
