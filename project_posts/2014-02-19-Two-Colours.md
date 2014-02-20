@@ -1,4 +1,4 @@
-## Two-Colour
+## Two Colours
 
 A flower of a single colour would be too simple - it would be just a block, as I've always
 used colour variation instead of lines and shapes to structure my images.
