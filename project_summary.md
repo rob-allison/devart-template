@@ -19,4 +19,3 @@ I propose to determine a method of constructing something resembling a flower, u
 
 Hence the exhibit would evolve according to the preferences of visitors, with potential for effects - for example speciation - that can be found in the natural world. 
 
-![Bloom cover image](project_images/cover.jpg?raw=true "Bloom")
