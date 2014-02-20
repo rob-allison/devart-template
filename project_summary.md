@@ -18,3 +18,5 @@ Underpinning all this is an effort to show how something almost natural can emer
 I propose to determine a method of constructing something resembling a flower, using 'binary dna' as input. There would be a population of such flowers. Visitors would be able to select flowers to breed together, the resulting offspring then added to the population. Flowers would have a lifespan, and would be removed after a certain time. This changing population would be displayed with a suitable taxonomy.
 
 Hence the exhibit would evolve according to the preferences of visitors, with potential for effects - for example speciation - that can be found in the natural world. 
+
+![Bloom cover image](project_images/cover.jpg?raw=true "Bloom")
