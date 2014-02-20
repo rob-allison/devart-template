@@ -11,6 +11,12 @@ digital productions and will anchor viewers' understanding. Something like this 
 
 ![A population of simple 2 colour flower analogues](../project_images/pop2col.jpg?raw=true "A population of simple 2 colour flower analogues")
 
-It is possible to imagine each colour to be controlled by a section of dna, a chromasome. Breeding two such flowers may occur with simple swapping of entire chromosomes like so (mirrors and other combinations also shown):
+### Breeding
+
+It is possible to imagine each colour to be controlled by a section of dna, a chromosome. Breeding two such flowers may occur with simple swapping of entire chromosomes like so (mirrors and other combinations also shown):
 
 ![Breeding 2 colours](../project_images/breed2col.jpg?raw=true "Breeding 2 colours")
+
+The chomosomes themselves may interchange genetic material, leading to colour mixing:
+
+![Mixing colours](../project_images/mix2col.jpg?raw=true "Mixing colours")
