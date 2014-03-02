@@ -1,0 +1,85 @@
+## ReST (Representational State Transfer) API
+
+The server API for storing populations of flowers will follow the ReST architectural pattern. 
+There will be a collection representing each population containing elements representing each flower.
+The four request method verbs GET, PUT, POST, and DELETE will be implemented to manipulate the flower populations.
+JSON will be used for state transfer.
+
+Note that this API presupposes that each collection has been initialised with a starting population of flowers.
+
+### Collection URI
+
+```
+http://<server_path>/<population_name>
+```
+
+eg
+
+```
+http://robertallison.co.uk/bloom/barbican
+```
+
+GET: Lists relative uris of the flowers in the population
+PUT: (not implemented)
+POST: Create a new flower, supplying two parents. Returns uri of created flower.
+DELETE: Delete the entire population
+
+
+### Element URI
+
+```
+http://<server_path>/<population_name>/<flower_id>
+```
+
+eg
+
+```
+http://robertallison.co.uk/bloom/barbican/23
+```
+
+GET: return details of individual flower:
+	image url
+	incept date/time
+	parents (list of parent uris)
+	dna (list of hex encoded chromasomes)
+
+PUT: (not implemented)
+POST: (not implemented)
+DELETE: Delete the flower from the population
+
+### Example
+
+Listing flowers:
+
+```
+GET http://robertallison.co.uk/bloom/barbican
+=> [ "5", "6", "8", "9" ]
+```
+
+Creating a flower with two parents:
+
+```
+POST http://robertallison.co.uk/bloom/barbican [ "5", "9" ]
+=> "10"
+```
+
+Details of a flower:
+
+```
+GET http://robertallison.co.uk/bloom/barbican/10
+=>
+{
+  "image" : "images/img10.png",
+  "incept" : "2014-03-02 T 20:33",
+  "parents" : [ "5", "9" ],
+  "dna" : [ "3707344A40938222", "B7E151628AED2A6B" ]
+}
+```
+
+Delete a flower:
+
+```
+DELETE http://robertallison.co.uk/bloom/barbican/10
+```
+				
+This is just an api skeleton, it will be fleshed out as the project progresses.
