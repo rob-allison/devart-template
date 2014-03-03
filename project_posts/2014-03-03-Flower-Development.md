@@ -4,7 +4,7 @@ Developing the flower from a simplistic square wihin a square to something more 
 
 ![Flower development](../project_images/flowerdev.jpg?raw=true "Flower development")
 
-Collaging details from previous work (robertallison.co.uk) to get an idea of what might be possible:
+Collaging details from previous [work](http://www.robertallison.co.uk "work") to get an idea of what might be possible:
 
 ![Flower collage](../project_images/flowercollage.png?raw=true "Flower collage")
 
