@@ -11,23 +11,21 @@ main() {
   List<int> png = encodePng(im);
   new File('/home/rob/test/test.png')..writeAsBytesSync(png);
   */
-  
+  /*  
   List<int> colours = new List<int>( );
   for ( int j = 0; j < 250; j = j + 5 ) {
     colours.add(getColor(100,j,100));
-  }
-  
-  CentreGrowth cg = new CentreGrowth(colours.iterator);
-  int i = 0;
-  while ( cg.moveNext() ) {
-    Plane pl = cg.current;
-    Image im = pl.render(52,10);
+  }*/
+
+  Flower flower = new Flower([]);
+  for (int i = 0; i < 50; i++) {
+    Image im = flower.render(52, 10);
     List<int> png = encodePng(im);
     String istr = i.toString();
-    if ( i < 10 ) {
+    if (i < 10) {
       istr = "0" + istr;
     }
     new File('/home/rob/test/img$istr.png')..writeAsBytesSync(png);
-    i++;
+    flower = flower.grow();
   }
 }
