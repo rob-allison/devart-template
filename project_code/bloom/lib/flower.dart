@@ -10,13 +10,13 @@ class Flower {
 
   Flower._internal(this.chromosomes, this.radius);
 
-  Image render(int r, int dpb) {
-    int side = r * 2 * dpb;
+  Image render(int r, int dpb, [int gap = 0]) {
+    int side = r * 2 * (dpb + gap);
     Image image = new Image(side, side);
     petals.forEach((p, c) {
-      int x1 = (r + p.x) * dpb;
+      int x1 = (r + p.x) * (dpb + gap);
       int x2 = x1 + dpb;
-      int y1 = (r + p.y) * dpb;
+      int y1 = (r + p.y) * (dpb + gap);
       int y2 = y1 + dpb;
       image = fillRect(image, x1, y1, x2, y2, c.toColour());
     });
@@ -43,12 +43,21 @@ class Flower {
   List<Petal> growRing(int r, List<Petal> ring) {
 
     List<Petal> result = new List();
-    for (Petal pet in ring) {
-      result.add(pet.grow());
+
+    Random rng = new Random();
+    List<int> divs = new List();
+    for (int i = 0; i < 8; i++) {
+      divs.add(rng.nextInt(ring.length));
     }
 
-    for (int i = 0; i < 8; i++) {
-      result.add(ring[0].grow());
+    for (int i = 0; i < ring.length; i++) {
+      Petal ptl = ring[i];
+      result.add(ptl.grow());
+      for (int div in divs) {
+        if (div == i) {
+          result.add(ptl.grow());
+        }
+      }
     }
 
     return result;

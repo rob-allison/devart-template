@@ -1,7 +1,7 @@
 library bloom;
 
 import 'package:image/image.dart';
-import 'dart:collection';
+import 'dart:math';
 
 part 'point.dart';
 part 'flower.dart';

@@ -14,7 +14,11 @@ class Petal {
     return new Petal._internal(chromosomes, generation, age + 1);
   }
 
+  Petal divide() {
+    return new Petal._internal(chromosomes, generation, age);
+  }
+
   int toColour() {
-    return getColor(100, age.toDouble() * 500 ~/ (generation * 10 + 1), 100);
+    return getColor(100, age * 10, generation * 10);
   }
 }
