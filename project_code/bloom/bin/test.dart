@@ -6,7 +6,7 @@ main() {
 
   Flower flower = new Flower([]);
   for (int i = 0; i < 25; i++) {
-    Image im = flower.render(52, 8, 2);
+    Image im = flower.render(25, 8, 2);
     List<int> png = encodePng(im);
     String istr = i.toString();
     if (i < 10) {
