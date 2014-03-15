@@ -18,9 +18,9 @@ class Flower {
     Image image = new Image(side, side);
     petals.forEach((p, c) {
       int x1 = (r + p.x) * (dpb + gap);
-      int x2 = x1 + dpb;
+      int x2 = x1 + dpb - 1;
       int y1 = (r + p.y) * (dpb + gap);
-      int y2 = y1 + dpb;
+      int y2 = y1 + dpb - 1;
       image = fillRect(image, x1, y1, x2, y2, c.toColour());
     });
     return image;
@@ -45,20 +45,31 @@ class Flower {
 
   List<Petal> growRing(int r, List<Petal> ring) {
 
-    List<Petal> result = new List();
+    List<Petal> result = new List(ring.length + 8);
 
-
-    List<int> divs = new List();
-    for (int i = 0; i < 8; i++) {
-      divs.add(rng.nextInt(ring.length));
+    List<int> divs;
+    if (r == 1) {
+      divs = [0,0,1,1,2,2,3,3];
+    } else {
+      divs = new List();
+      for (int i = 0; i < 8; i++) {
+        divs.add(rng.nextInt(ring.length));
+      }
     }
 
-    for (int i = 0; i < ring.length; i++) {
-      Petal ptl = ring[i];
-      result.add(ptl.grow());
+    int offset = rng.nextInt(ring.length);
+    List<Petal> cring = new CircularList(ring, offset, rng.nextBool());
+    List<Petal> cresult = new CircularList.project(result, cring);
+ 
+    int j = 0;
+    for (int i = 0; i < cring.length; i++) {
+      Petal ptl = cring[i];
+      cresult[j] = ptl.grow();
+      j++;
       for (int div in divs) {
         if (div == i) {
-          result.add(ptl.grow());
+          cresult[j] = ptl.grow();
+          j++;
         }
       }
     }
