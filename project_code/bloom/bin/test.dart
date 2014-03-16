@@ -9,9 +9,9 @@ main() {
 
   Random rng = new Random();
   RandomDna rdna = new RandomDna(rng, 64);
-
-  for (int j = 40; j < 100; j++) {
-    Flower flower = new Flower(rng, [rdna.build(), rdna.build(), new Dna(64)]);
+  
+  for (int j = 100; j < 200; j++) {
+    Flower flower = new Flower(rng, [rdna.build(), rdna.build(), new Dna(64), rdna.build()]);
     for (int i = 0; i < setting[0]; i++) {
       //render(setting,"test",flower, i);
       flower = flower.grow();

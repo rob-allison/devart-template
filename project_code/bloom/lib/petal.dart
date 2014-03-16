@@ -13,12 +13,14 @@ class Petal {
   Petal._internal(this.rng, this.chromosomes, this.generation, this.marker, this.age);
 
   Petal grow() {
-    List<Dna> chroms = new List(3);
+    List<Dna> chroms = new List(4);
     chroms[0] = chromosomes[0];
     chroms[1] = chromosomes[1];
     Dna mask = chromosomes[2].copy();
-    degenerate(mask);
+    int deg = chromosomes[3].sum() ~/ 16;
+    degenerate(mask, deg);
     chroms[2] = mask;
+    chroms[3] = chromosomes[3];
     return new Petal._internal(rng, chroms, generation, marker, age + 1);
   }
 
@@ -41,16 +43,17 @@ class Petal {
     for ( int i = age; i < inner.length(); i++ ) {
       col[i] = inner[i];
     }*/
-    
+
     //print(mask);
 
     return dnaToColour(col);
   }
 
-  void degenerate(Dna dna) {
+  void degenerate(Dna dna, int deg) {
+   
     var app = dna.appender();
     while (app.canAppend()) {
-      if (rng.nextInt(512) < 16) {
+      if (rng.nextInt(512) < deg) {
         app.append(true);
       } else {
         app.skip();
