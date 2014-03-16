@@ -11,7 +11,7 @@ need to divide (at random) as the ring expands:
 
 ### Growth coloured by alternating generations of blocks/petals
 
-![Petal growth](../project_images/growgen.jpg?raw=true "Petal growth")
+![Growth by generation](../project_images/growgen.png?raw=true "Growth by generation")
 
 https://www.youtube.com/watch?v=BAaxNdkNJMM
 
@@ -19,7 +19,7 @@ https://www.youtube.com/watch?v=BAaxNdkNJMM
 
 The diagonal flares are actually an optical illusion.
 
-![Petal growth](../project_images/growage.jpg?raw=true "Petal growth")
+![Growth by age](../project_images/growage.png?raw=true "Growth by age")
 
 https://www.youtube.com/watch?v=j6075xNNSAs
 
@@ -27,7 +27,7 @@ https://www.youtube.com/watch?v=j6075xNNSAs
 
 Concentric rings produced by this process are ivocative of real petals.
 
-![Petal growth](../project_images/growmrk.jpg?raw=true "Petal growth")
+![Growth by position](../project_images/growmrk.png?raw=true "Growth by position")
 
 https://www.youtube.com/watch?v=os0Hwa2iTw8
 
@@ -37,7 +37,7 @@ A much greater block density has been used. By using this growth process, a flow
 The logical structure as above can be used to control the expression of DNA as the digital flower grows,
 to create the effects that are wanted.
 
-![Petal growth](../project_images/growall.jpg?raw=true "Petal growth")
+![Growth by all](../project_images/growall.png?raw=true "Growth by all")
 
 https://www.youtube.com/watch?v=3ohcjxW7ZsQ
 
