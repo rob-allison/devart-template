@@ -1,17 +1,16 @@
 part of bloom;
 
 class Flower {
-
+  
+  final Random rng;
   final List<Dna> chromosomes;
   final int radius;
   final Map<Point, Petal> petals = new Map();
-  final Random rng;
 
-  Flower(this.chromosomes)
-      : radius = 0,
-        rng = new Random();
+  Flower(this.rng, this.chromosomes)
+      : radius = 0;
 
-  Flower._internal(this.chromosomes, this.radius, this.rng);
+  Flower._internal(this.rng, this.chromosomes, this.radius);
 
   Image render(int r, int dpb, [int gap = 0]) {
     int side = r * 2 * (dpb + gap);
@@ -29,10 +28,10 @@ class Flower {
   Flower grow() {
 
     int r = radius + 1;
-    Flower result = new Flower._internal(chromosomes, r, rng);
+    Flower result = new Flower._internal(rng, chromosomes, r);
 
-    result.writeRing(1, [new Petal(chromosomes, r, 0), new Petal(chromosomes, r,
-        1), new Petal(chromosomes, r, 2), new Petal(chromosomes, r, 3)]);
+    result.writeRing(1, [new Petal(rng, chromosomes, r, 0), new Petal(rng, chromosomes, r,
+        1), new Petal(rng, chromosomes, r, 2), new Petal(rng, chromosomes, r, 3)]);
 
     for (int i = 1; i <= radius; i++) {
       List<Petal> ring = readRing(i);

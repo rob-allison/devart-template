@@ -76,7 +76,3 @@ List<Point> generateRingPoints(int i) {
   
   return points;
 }
-
-main() {
-  generateRingPoints(2);
-}
