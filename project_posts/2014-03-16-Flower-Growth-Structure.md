@@ -23,7 +23,7 @@ The diagonal flares are actually an optical illusion.
 
 https://www.youtube.com/watch?v=j6075xNNSAs
 
-### Growth coloured by the initial position of the block and its sub-divisions when first appearing
+### Growth coloured by the initial position of the block when first appearing
 
 Concentric rings produced by this process are ivocative of real petals.
 
@@ -34,7 +34,7 @@ https://www.youtube.com/watch?v=os0Hwa2iTw8
 ### Combining all three colourations
 
 A much greater block density has been used. By using this growth process, a flower like construct can appear. 
-The logical structure as above can be used to control the expression of DNA as the digital flower grows,
+This logical structure can be used to control the expression of DNA as the digital flower grows,
 to create the effects that are wanted.
 
 ![Growth by all](../project_images/growall.png?raw=true "Growth by all")
