@@ -35,7 +35,7 @@ https://www.youtube.com/watch?v=os0Hwa2iTw8
 
 A much greater block density has been used. By using this growth process, a flower like construct can appear. 
 This logical structure can be used to control the expression of DNA as the digital flower grows,
-to create the effects that are wanted.
+to create the desired effects.
 
 ![Growth by all](../project_images/growall.png?raw=true "Growth by all")
 
