@@ -39,6 +39,5 @@ Generation, age and initial position are combined.
 
 https://www.youtube.com/watch?v=3ohcjxW7ZsQ
 
-The logical structure illustrated above can be used to control the expression of DNA as the digital flower grows,
-creating the effects desired.
+The logical structure illustrated above can be used to control (and be controlled by) the expression of DNA as the digital flower grows.
 
