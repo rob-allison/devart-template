@@ -25,7 +25,7 @@ https://www.youtube.com/watch?v=j6075xNNSAs
 
 ### Growth coloured by the initial position of the block when first appearing
 
-Concentric rings produced by this process are ivocative of real petals.
+Concentric rings produced by this process are evocative of real petals.
 
 ![Growth by position](../project_images/growmrk.png?raw=true "Growth by position")
 
