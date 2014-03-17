@@ -46,11 +46,27 @@ class Petal {
 
     //print(mask);
 
-    return dnaToColour(col);
+    //return dnaToColour(col);
+    switch (marker) {
+      case 0:
+        return getColor(100, 0, 0);
+        break;
+      case 1:
+        return getColor(100, 100, 0);
+        break;
+      case 2:
+        return getColor(0, 100, 0);
+        break;
+      case 3:
+        return getColor(0, 0, 100);
+        break;
+    }
+
+    throw "not reachable";
   }
 
   void degenerate(Dna dna, int deg) {
-   
+
     var app = dna.appender();
     while (app.canAppend()) {
       if (rng.nextInt(512) < deg) {
