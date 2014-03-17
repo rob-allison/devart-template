@@ -33,11 +33,12 @@ https://www.youtube.com/watch?v=os0Hwa2iTw8
 
 ### Combining all three colourations
 
-A much greater block density has been used. By using this growth process, a flower like construct can appear. 
-This logical structure can be used to control the expression of DNA as the digital flower grows,
-to create the desired effects.
+Generation, age and initial position are combined. 
 
 ![Growth by all](../project_images/growall.png?raw=true "Growth by all")
 
 https://www.youtube.com/watch?v=3ohcjxW7ZsQ
+
+The logical structure illustrated above can be used to control the expression of DNA as the digital flower grows,
+creating the effects desired.
 
