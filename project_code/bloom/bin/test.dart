@@ -11,7 +11,7 @@ main() {
   RandomDna rdna = new RandomDna(rng, 64);
   
   for (int j = 0; j < 1; j++) {
-    Flower flower = new Flower(rng, [rdna.build(), rdna.build(), new Dna(64), rdna.build()]);
+    Flower flower = new Flower(rng, [rdna.build(), rdna.build(), new Dna.ofLength(64), rdna.build()]);
     for (int i = 0; i < setting[0]; i++) {
       render(setting,"test",flower, i);
       flower = flower.grow();

@@ -52,14 +52,16 @@ void main() {
     iter.current = true;
     expect(dna.toString(), equals("0100000000010000"));
   });
-
+/*
   test("sum/avg", () {
     Dna dna = new Dna.ofLength(16);
     dna[0] = true;
     dna[5] = true;
     dna[9] = true;
     dna[10] = true;
+    
+    
     expect(dna.sum, equals(4));
     expect(dna.average, equals(0.25));
-  });
+  });*/
 }

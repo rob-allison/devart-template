@@ -26,7 +26,7 @@ class Dna extends ListBase<bool> {
 
   void set length(int length) => throw "unmodifiable length";
 
-  Iterator<bool> get modifyingIterator => new DnaIterator(this);
+  Iterator<bool> get modifyingIterator => new BaseIterator(this);
 
   Dna copy() {
     Dna cpy = new Dna.ofLength(length);
@@ -40,23 +40,9 @@ class Dna extends ListBase<bool> {
     return new Dna(new ByteList(new ByteData.view(sequence.bytes.buffer, offset
         ~/ 8, length ~/ 8)));
   }
-
-  int get sum {
-    int s = 0;
-    sequence.forEach((b) {
-      int bits = 0;
-      for (int i = 0; i < 8; i++) {
-        if ((b & (1 << i)) != 0) {
-          bits++;
-        }
-      }
-      s += bits;
-    });
-    return s;
-  }
-
-  double get average {
-    return sum.toDouble() / length.toDouble();
+  
+  Iterator<Gene> geneIterator( int len ) {
+    return new GeneIterator( this, len );
   }
 
   String toString() {
@@ -68,12 +54,29 @@ class Dna extends ListBase<bool> {
   }
 }
 
-class DnaIterator extends Iterator<bool> {
+class GeneIterator extends Iterator<Gene> {
+  final Dna dna;
+  final int len;
+  int i;
+  
+  GeneIterator(this.dna,this.len) {
+    i = -len;
+  }
+  
+  Gene get current => new Gene( dna, i, len);
+  
+  bool moveNext() {
+    i+=len;
+    return true;
+  }
+}
+
+class BaseIterator extends Iterator<bool> {
   final Iterator iter;
   final Dna dna;
   int i = -1;
 
-  DnaIterator(Dna dna)
+  BaseIterator(Dna dna)
       : this.dna = dna,
         iter = dna.iterator;
 
@@ -90,6 +93,25 @@ class DnaIterator extends Iterator<bool> {
 
   void set current(bool b) {
     dna[i] = b;
+  }
+}
+
+class Gene extends SubList<bool>{
+  
+  Gene(Dna dna, int offset, int length) : super(dna, offset, length);
+  
+  int get sum {
+    int s = 0;
+    this.forEach((b) {
+      int bits = 0;
+      for (int i = 0; i < 8; i++) {
+        if ((b & (1 << i)) != 0) {
+          bits++;
+        }
+      }
+      s += bits;
+    });
+    return s;
   }
 }
 
@@ -155,7 +177,7 @@ class Chromosomes extends ListBase<Dna> {
     chromosomes.forEach((dna) {
       int y = 0;
       dna.forEach((b) {
-        image = fillRect(image, x, y, x + w, y + d, b ? dnaToColour(dna) : white
+        image = fillRect(image, x, y, x + w, y + d, b ? decodeColour(dna) : white
             );
         y = y + d;
       });

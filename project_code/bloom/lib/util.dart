@@ -51,3 +51,17 @@ class ByteList extends ListBase<int>{
     throw "length cannot be set";
   }
 }
+
+class SubList<E> extends ListBase<E>{
+  final List list;
+  final int offset;
+  final int length;
+  
+  SubList(this.list,this.offset,this.length);
+  
+  E operator [](int i) => list[offset + i];
+  
+  void operator []=(int i, E value) {
+    list[offset+i]=value;
+  }
+}

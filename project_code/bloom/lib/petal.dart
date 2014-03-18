@@ -17,7 +17,10 @@ class Petal {
     chroms[0] = chromosomes[0];
     chroms[1] = chromosomes[1];
     Dna mask = chromosomes[2].copy();
-    int deg = chromosomes[3].sum ~/ 16;
+    Iterator<Gene> ig = chromosomes[3].geneIterator(16);
+    ig.moveNext();
+    int deg = ig.current.sum;
+    
     degenerate(mask, deg);
     chroms[2] = mask;
     chroms[3] = chromosomes[3];
@@ -69,17 +72,20 @@ class Petal {
     for (var iter = dna.modifyingIterator; iter.moveNext(); ) {
       if (rng.nextInt(512) < deg) {
         iter.current = true;
-      } 
+      }
     }
   }
 }
 
-int dnaToColour(Dna dna) {
-  int r = (dna.subSequence(0, dna.length ~/ 2).average * 255).toInt();
-  int g = (dna.subSequence(dna.length ~/ 4, dna.length ~/ 2).average *
-      255).toInt();
-  int b = (dna.subSequence(dna.length ~/ 2, dna.length ~/ 2).average *
-      255).toInt();
-  //print( r.toString() + " " + g.toString() + " " + b.toString());
+int decodeColour(Dna dna) {
+
+  Iterator<Gene> iter = dna.geneIterator(128);
+  iter.moveNext();
+  int r = iter.current.sum;
+  iter.moveNext();
+  int g = iter.current.sum;
+  iter.moveNext();
+  int b = iter.current.sum;
+
   return getColor(r, g, b);
 }
