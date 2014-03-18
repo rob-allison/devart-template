@@ -2,119 +2,68 @@ part of bloom;
 
 class Dna extends ListBase<bool> {
 
-  final ByteList sequence;
+  final BitList sequence;
 
   Dna(this.sequence);
 
-  Dna.fromString(String str): sequence = new ByteList.ofLength(str.length ~/ 8)
-      {
-    for (int i = 0; i < str.length; i++) {
-      this[i] = str[i] == "1"[0];
-    }
-  }
+  Dna.fromString(String str): sequence = new BitList.fromString(str);
 
-  Dna.ofLength(int length): sequence = new ByteList.ofLength(length ~/ 8);
+  Dna.ofLength(int length): sequence = new BitList.ofLength(length);
 
-  bool operator [](int i) => (sequence[i ~/ 8] & (1 << (i % 8))) != 0;
+  bool operator [](int i) => sequence[i];
 
   void operator []=(int i, bool value) {
-    sequence[i ~/ 8] = value ? sequence[i ~/ 8] | (1 << (i % 8)) : sequence[i ~/
-        8] & ~(1 << (i % 8));
+    sequence[i] = value;
   }
 
-  int get length => sequence.length * 8;
+  int get length => sequence.length;
 
   void set length(int length) => throw "unmodifiable length";
 
-  Iterator<bool> get modifyingIterator => new BaseIterator(this);
+  Iterator<bool> get modifyingIterator => new ModifyingIterator(this);
 
   Dna copy() {
-    Dna cpy = new Dna.ofLength(length);
-    for (int i = 0; i < length; i++) {
-      cpy[i] = this[i];
-    }
-    return cpy;
+    return new Dna(sequence.copy());
   }
 
-  Dna subSequence(int offset, int length) {
-    return new Dna(new ByteList(new ByteData.view(sequence.bytes.buffer, offset
-        ~/ 8, length ~/ 8)));
-  }
-  
-  Iterator<Gene> geneIterator( int len ) {
-    return new GeneIterator( this, len );
+  Iterator<Codon> get codonIterator {
+    return new CodonIterator(this);
   }
 
   String toString() {
-    String result = "";
-    this.forEach((b) {
-      result += b ? "1" : "0";
-    });
-    return result;
+    return sequence.toString();
   }
 }
 
-class GeneIterator extends Iterator<Gene> {
+class CodonIterator extends Iterator<Codon> {
   final Dna dna;
-  final int len;
-  int i;
-  
-  GeneIterator(this.dna,this.len) {
-    i = -len;
-  }
-  
-  Gene get current => new Gene( dna, i, len);
-  
+  int i = -Codon.length;
+
+  CodonIterator(this.dna);
+
+  Codon get current => new Codon(dna, i);
+
   bool moveNext() {
-    i+=len;
-    return true;
+    i += Codon.length;
+    return i < dna.length;
   }
 }
 
-class BaseIterator extends Iterator<bool> {
-  final Iterator iter;
+class Codon {
+  static final int length = 4;
   final Dna dna;
-  int i = -1;
+  final int offset;
 
-  BaseIterator(Dna dna)
-      : this.dna = dna,
-        iter = dna.iterator;
+  Codon(this.dna, this.offset);
 
-  bool moveNext() {
-    if (iter.moveNext()) {
-      i++;
-      return true;
-    } else {
-      return false;
+  int decode() {
+    int v = 0;
+    for (int i = 0; i < length; i++) {
+      v += dna[offset] ? pow(2, i) : 0;
     }
-  }
-
-  bool get current => iter.current;
-
-  void set current(bool b) {
-    dna[i] = b;
+    return v;
   }
 }
-
-class Gene extends SubList<bool>{
-  
-  Gene(Dna dna, int offset, int length) : super(dna, offset, length);
-  
-  int get sum {
-    int s = 0;
-    this.forEach((b) {
-      int bits = 0;
-      for (int i = 0; i < 8; i++) {
-        if ((b & (1 << i)) != 0) {
-          bits++;
-        }
-      }
-      s += bits;
-    });
-    return s;
-  }
-}
-
 
 class RandomDna {
 
@@ -143,12 +92,12 @@ class RandomDna {
 
 Dna cross(Dna a, Dna b, ByteList mask) {
   Dna result = new Dna.ofLength(a.length);
-  for (int i = 0; i < a.sequence.length; i++) {
+  for (int i = 0; i < a.sequence.bytes.length; i++) {
     int amask = mask[i];
     int bmask = ~mask[i];
-    int apart = a.sequence[i] & amask;
-    int bpart = b.sequence[i] & bmask;
-    result.sequence[i] = apart | bpart;
+    int apart = a.sequence.bytes[i] & amask;
+    int bpart = b.sequence.bytes[i] & bmask;
+    result.sequence.bytes[i] = apart | bpart;
   }
   return result;
 }
@@ -177,8 +126,7 @@ class Chromosomes extends ListBase<Dna> {
     chromosomes.forEach((dna) {
       int y = 0;
       dna.forEach((b) {
-        image = fillRect(image, x, y, x + w, y + d, b ? decodeColour(dna) : white
-            );
+        image = fillRect(image, x, y, x + w, y + d, b ? decodeColour(dna) : white);
         y = y + d;
       });
       x = x + w + gap;

@@ -7,37 +7,42 @@ class Petal {
   final int generation;
   final int age;
   final int marker;
+  final BitList mask;
 
-  Petal(this.rng, this.chromosomes, this.generation, this.marker): age = 0;
+  Petal(this.rng, this.chromosomes, this.generation, this.age, this.marker, this.mask);
 
-  Petal._internal(this.rng, this.chromosomes, this.generation, this.marker, this.age);
+  Petal.start(this.rng, this.chromosomes, this.generation, this.marker)
+      : age = 0,
+        mask = new BitList.ofLength(128);
 
   Petal grow() {
-    List<Dna> chroms = new List(4);
-    chroms[0] = chromosomes[0];
-    chroms[1] = chromosomes[1];
-    Dna mask = chromosomes[2].copy();
-    Iterator<Gene> ig = chromosomes[3].geneIterator(16);
-    ig.moveNext();
-    int deg = ig.current.sum;
+    BitList dmask = mask.copy();
     
-    degenerate(mask, deg);
-    chroms[2] = mask;
-    chroms[3] = chromosomes[3];
-    return new Petal._internal(rng, chroms, generation, marker, age + 1);
+    
+    
+    dmask[rng.nextInt(dmask.length)] = true;
+    dmask[rng.nextInt(dmask.length)] = true;
+    dmask[rng.nextInt(dmask.length)] = true;
+    dmask[rng.nextInt(dmask.length)] = true;
+    dmask[rng.nextInt(dmask.length)] = true;
+    dmask[rng.nextInt(dmask.length)] = true;
+    dmask[rng.nextInt(dmask.length)] = true;
+    dmask[rng.nextInt(dmask.length)] = true;
+    dmask[rng.nextInt(dmask.length)] = true;
+    return new Petal(rng, chromosomes, generation, age + 1, marker, dmask);
   }
 
   Petal divide() {
-    return new Petal._internal(rng, chromosomes, generation, marker, age);
+    return new Petal(rng, chromosomes, generation, age, marker, mask);
   }
 
   int toColour() {
 
     Dna inner = chromosomes[0];
     Dna outer = chromosomes[1];
-    Dna mask = chromosomes[2];
+    //Dna mask = chromosomes[2];
 
-    Dna col = cross(inner, outer, mask.sequence);
+    //Dna col = cross(inner, outer, mask.sequence);
     /*
     Dna col = new Dna( inner.length() );
     for ( int i = 0; i < age; i++ ) {
@@ -50,6 +55,7 @@ class Petal {
     //print(mask);
 
     //return dnaToColour(col);
+    /*
     switch (marker) {
       case 0:
         return getColor(100, 0, 0);
@@ -65,7 +71,21 @@ class Petal {
         break;
     }
 
-    throw "not reachable";
+    throw "not reachable";*/
+
+    Iterator<Codon> itera = chromosomes[0].codonIterator;
+    Iterator<Codon> iterb = chromosomes[1].codonIterator;
+    Iterator<bool> iterm = mask.iterator;
+
+    List<int> proteins = new List();
+    while (itera.moveNext()) {
+      iterb.moveNext();
+      iterm.moveNext();
+      proteins.add(iterm.current ? itera.current.decode() :
+          iterb.current.decode());
+    }
+
+    return formColour(proteins.iterator);
   }
 
   void degenerate(Dna dna, int deg) {
@@ -77,15 +97,32 @@ class Petal {
   }
 }
 
+int decodeMaskDeg(Dna dna) {
+  Iterator<Codon> iter = dna.codonIterator;
+}
+
 int decodeColour(Dna dna) {
+  Iterator<Codon> iter = dna.codonIterator;
+  List<int> proteins = new List();
+  while (iter.moveNext()) {
+    proteins.add(iter.current.decode());
+  }
+  return formColour(proteins.iterator);
+}
 
-  Iterator<Gene> iter = dna.geneIterator(128);
-  iter.moveNext();
-  int r = iter.current.sum;
-  iter.moveNext();
-  int g = iter.current.sum;
-  iter.moveNext();
-  int b = iter.current.sum;
-
+int formColour(Iterator<int> iter) {
+  int r = formChannel(iter);
+  int g = formChannel(iter);
+  int b = formChannel(iter);
   return getColor(r, g, b);
+}
+
+int formChannel(Iterator<int> iter) {
+  int sum = 0;
+  for (int i = 0; i < 32; i++) {
+    iter.moveNext();
+    sum += iter.current;
+  }
+  sum += 16;
+  return sum ~/ 2;
 }

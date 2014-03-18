@@ -11,6 +11,11 @@ void main() {
     expect(new Dna.fromString("1000011001001000").toString(), equals(
         "1000011001001000"));
   });
+  
+  test("length", () {
+     Dna dna = new Dna.ofLength(16);
+     expect( dna.length, equals(16));
+  });
 
   test("set", () {
     Dna dna = new Dna.ofLength(16);
@@ -32,8 +37,16 @@ void main() {
     expect(dna[5], equals(true));
     expect(dna[10], equals(false));
   });
-
+  
   test("iterator", () {
+    Dna dna = new Dna.ofLength(16);
+    var iter = dna.iterator;
+    while ( iter.moveNext() ) {
+      expect( iter.current, equals(false) );
+    }
+  });
+
+  test("modifying iterator", () {
     Dna dna = new Dna.ofLength(16);
     var iter = dna.modifyingIterator;
     iter.moveNext();

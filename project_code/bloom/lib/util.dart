@@ -65,3 +65,73 @@ class SubList<E> extends ListBase<E>{
     list[offset+i]=value;
   }
 }
+
+class BitList extends ListBase<bool> {
+
+  final ByteList bytes;
+
+  BitList(this.bytes);
+
+  BitList.fromString(String str): bytes = new ByteList.ofLength(str.length ~/ 8)
+      {
+    for (int i = 0; i < str.length; i++) {
+      this[i] = str[i] == "1"[0];
+    }
+  }
+
+  BitList.ofLength(int length): bytes = new ByteList.ofLength(length ~/ 8);
+
+  bool operator [](int i) => (bytes[i ~/ 8] & (1 << (i % 8))) != 0;
+
+  void operator []=(int i, bool value) {
+    bytes[i ~/ 8] = value ? bytes[i ~/ 8] | (1 << (i % 8)) : bytes[i ~/
+        8] & ~(1 << (i % 8));
+  }
+
+  int get length => bytes.length * 8;
+
+  void set length(int length) => throw "unmodifiable length";
+
+  Iterator<bool> get modifyingIterator => new ModifyingIterator(this);
+
+  BitList copy() {
+    BitList cpy = new BitList.ofLength(length);
+    for (int i = 0; i < length; i++) {
+      cpy[i] = this[i];
+    }
+    return cpy;
+  }
+
+  String toString() {
+    String result = "";
+    this.forEach((b) {
+      result += b ? "1" : "0";
+    });
+    return result;
+  }
+}
+
+class ModifyingIterator<E> extends Iterator<E> {
+  final Iterator iter;
+  final List<E> list;
+  int i = -1;
+
+  ModifyingIterator(List list)
+      : this.list = list,
+        iter = list.iterator;
+
+  bool moveNext() {
+    if (iter.moveNext()) {
+      i++;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool get current => iter.current;
+
+  void set current(E e) {
+    list[i] = e;
+  }
+}
