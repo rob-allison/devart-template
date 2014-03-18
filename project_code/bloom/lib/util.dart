@@ -28,3 +28,26 @@ class CircularList<E> extends ListBase<E> {
     return positive ? (i + offset) % length : length - ((i + offset) % length) - 1;
   }
 }
+
+class ByteList extends ListBase<int>{
+  
+  final ByteData bytes;
+
+  ByteList(this.bytes);
+  
+  ByteList.ofLength(int length): bytes = new ByteData(length);
+
+  int operator [](int i) => bytes.getUint8(i);
+
+  void operator []=(int i, int value) {
+    bytes.setUint8(i, value);
+  }
+  
+  int get length {
+    return bytes.lengthInBytes;
+  }
+  
+  void set length(int length) {
+    throw "length cannot be set";
+  }
+}

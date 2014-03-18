@@ -17,7 +17,7 @@ class Petal {
     chroms[0] = chromosomes[0];
     chroms[1] = chromosomes[1];
     Dna mask = chromosomes[2].copy();
-    int deg = chromosomes[3].sum() ~/ 16;
+    int deg = chromosomes[3].sum ~/ 16;
     degenerate(mask, deg);
     chroms[2] = mask;
     chroms[3] = chromosomes[3];
@@ -34,7 +34,7 @@ class Petal {
     Dna outer = chromosomes[1];
     Dna mask = chromosomes[2];
 
-    Dna col = cross(inner, outer, mask);
+    Dna col = cross(inner, outer, mask.sequence);
     /*
     Dna col = new Dna( inner.length() );
     for ( int i = 0; i < age; i++ ) {
@@ -66,24 +66,20 @@ class Petal {
   }
 
   void degenerate(Dna dna, int deg) {
-
-    var app = dna.appender();
-    while (app.canAppend()) {
+    for (var iter = dna.modifyingIterator; iter.moveNext(); ) {
       if (rng.nextInt(512) < deg) {
-        app.append(true);
-      } else {
-        app.skip();
-      }
+        iter.current = true;
+      } 
     }
   }
+}
 
-  int dnaToColour(Dna dna) {
-    int r = (dna.subSequence(0, dna.length() ~/ 2).average() * 255).toInt();
-    int g = (dna.subSequence(dna.length() ~/ 4, dna.length() ~/ 2).average() *
-        255).toInt();
-    int b = (dna.subSequence(dna.length() ~/ 2, dna.length() ~/ 2).average() *
-        255).toInt();
-    //print( r.toString() + " " + g.toString() + " " + b.toString());
-    return getColor(r, g, b);
-  }
+int dnaToColour(Dna dna) {
+  int r = (dna.subSequence(0, dna.length ~/ 2).average * 255).toInt();
+  int g = (dna.subSequence(dna.length ~/ 4, dna.length ~/ 2).average *
+      255).toInt();
+  int b = (dna.subSequence(dna.length ~/ 2, dna.length ~/ 2).average *
+      255).toInt();
+  //print( r.toString() + " " + g.toString() + " " + b.toString());
+  return getColor(r, g, b);
 }

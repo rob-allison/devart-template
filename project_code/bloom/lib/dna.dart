@@ -1,71 +1,98 @@
 part of bloom;
 
-class Dna {
+class Dna extends ListBase<bool> {
 
-  final ByteData sequence;
+  final ByteList sequence;
 
-  Dna(int length): sequence = new ByteData(length);
+  Dna(this.sequence);
 
-  Dna._internal(this.sequence);
-
-  int operator [](int i) => sequence.getUint8(i);
-
-  void operator []=(int i, int value) {
-    sequence.setUint8(i, value);
+  Dna.fromString(String str): sequence = new ByteList.ofLength(str.length ~/ 8)
+      {
+    for (int i = 0; i < str.length; i++) {
+      this[i] = str[i] == "1"[0];
+    }
   }
 
-  Appender<bool> appender() {
-    return new DnaAppender(this);
+  Dna.ofLength(int length): sequence = new ByteList.ofLength(length ~/ 8);
+
+  bool operator [](int i) => (sequence[i ~/ 8] & (1 << (i % 8))) != 0;
+
+  void operator []=(int i, bool value) {
+    sequence[i ~/ 8] = value ? sequence[i ~/ 8] | (1 << (i % 8)) : sequence[i ~/
+        8] & ~(1 << (i % 8));
   }
+
+  int get length => sequence.length * 8;
+
+  void set length(int length) => throw "unmodifiable length";
+
+  Iterator<bool> get modifyingIterator => new DnaIterator(this);
 
   Dna copy() {
-    Dna cpy = new Dna(length());
-    for (int i = 0; i < length(); i++) {
+    Dna cpy = new Dna.ofLength(length);
+    for (int i = 0; i < length; i++) {
       cpy[i] = this[i];
     }
     return cpy;
   }
 
   Dna subSequence(int offset, int length) {
-    return new Dna._internal(new ByteData.view(sequence.buffer, offset, length)
-        );
+    return new Dna(new ByteList(new ByteData.view(sequence.bytes.buffer, offset
+        ~/ 8, length ~/ 8)));
   }
 
-  int length() {
-    return sequence.lengthInBytes;
-  }
-
-  int sum() {
+  int get sum {
     int s = 0;
-    for (int i = 0; i < length(); i++) {
-      int b = this[i];
-      s += bits(b);
-    }
+    sequence.forEach((b) {
+      int bits = 0;
+      for (int i = 0; i < 8; i++) {
+        if ((b & (1 << i)) != 0) {
+          bits++;
+        }
+      }
+      s += bits;
+    });
     return s;
   }
 
-  double average() {
-    return sum().toDouble() / (length().toDouble() * 8.toDouble());
+  double get average {
+    return sum.toDouble() / length.toDouble();
   }
 
   String toString() {
     String result = "";
-    for (int i = 0; i < length(); i++) {
-      String s = this[i].toRadixString(2);
-      while (s.length < 8) {
-        s = "0" + s;
-      }
-      result += s;
-    }
+    this.forEach((b) {
+      result += b ? "1" : "0";
+    });
     return result;
   }
 }
 
-abstract class Appender<E> {
-  void append(E e);
-  void skip();
-  bool canAppend();
+class DnaIterator extends Iterator<bool> {
+  final Iterator iter;
+  final Dna dna;
+  int i = -1;
+
+  DnaIterator(Dna dna)
+      : this.dna = dna,
+        iter = dna.iterator;
+
+  bool moveNext() {
+    if (iter.moveNext()) {
+      i++;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool get current => iter.current;
+
+  void set current(bool b) {
+    dna[i] = b;
+  }
 }
+
 
 class RandomDna {
 
@@ -76,17 +103,14 @@ class RandomDna {
   RandomDna(this.random, this.length, [this.window = 180]);
 
   Dna build() {
-
-    Dna dna = new Dna(length);
+    Dna dna = new Dna.ofLength(length);
     int n = random.nextInt(window);
     bool b = random.nextBool();
-    Appender<bool> appender = dna.appender();
-
     int i = 0;
-    while (appender.canAppend()) {
-      appender.append(b);
+    for (var iter = dna.modifyingIterator; iter.moveNext(); ) {
+      iter.current = b;
       if (i == n) {
-        n += random.nextInt(window);
+        n += 1 + random.nextInt(window);
         b = random.nextBool();
       }
       i++;
@@ -95,63 +119,48 @@ class RandomDna {
   }
 }
 
-class DnaAppender extends Appender<bool> {
-
-  final Dna dna;
-  int i = 0;
-  int b = 0;
-
-  DnaAppender(this.dna);
-
-  void append(bool bit) {
-    if (canAppend()) {
-      if (bit) {
-        dna[i] = dna[i] | 1 << b;
-      } else {
-        dna[i] = dna[i] & ~(1 << b);
-      }
-
-      skip();
-    } else {
-      throw "overflow";
-    }
-  }
-
-  void skip() {
-    if (canAppend()) {
-      b++;
-      if (b == 8) {
-        i++;
-        b = 0;
-      }
-    } else {
-      throw "overflow";
-    }
-  }
-
-  bool canAppend() {
-    return i < dna.length();
-  }
-}
-
-int bits(int b) {
-  int bits = 0;
-  for (int i = 0; i < 8; i++) {
-    if ((b & (1 << i)) != 0) {
-      bits++;
-    }
-  }
-  return bits;
-}
-
-Dna cross(Dna a, Dna b, Dna mask) {
-  Dna result = new Dna(a.length());
-  for (int i = 0; i < a.length(); i++) {
+Dna cross(Dna a, Dna b, ByteList mask) {
+  Dna result = new Dna.ofLength(a.length);
+  for (int i = 0; i < a.sequence.length; i++) {
     int amask = mask[i];
     int bmask = ~mask[i];
-    int apart = a[i] & amask;
-    int bpart = b[i] & bmask;
-    result[i] = apart | bpart;
+    int apart = a.sequence[i] & amask;
+    int bpart = b.sequence[i] & bmask;
+    result.sequence[i] = apart | bpart;
   }
   return result;
+}
+
+
+class Chromosomes extends ListBase<Dna> {
+  final List<Dna> chromosomes;
+
+  Chromosomes(this.chromosomes);
+
+  Dna operator [](int i) => chromosomes[i];
+
+  void operator []=(int i, Dna value) {
+    chromosomes[i] = value;
+  }
+
+  int get length => chromosomes.length;
+
+  void set length(int length) => throw "unmodifiable length";
+
+  Image render(int w, int d, int gap, int white, int black) {
+    Image image = new Image((w + gap) * chromosomes.length - gap, d *
+        chromosomes[0].length);
+
+    int x = 0;
+    chromosomes.forEach((dna) {
+      int y = 0;
+      dna.forEach((b) {
+        image = fillRect(image, x, y, x + w, y + d, b ? dnaToColour(dna) : white
+            );
+        y = y + d;
+      });
+      x = x + w + gap;
+    });
+    return image;
+  }
 }

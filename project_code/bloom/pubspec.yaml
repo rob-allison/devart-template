@@ -2,3 +2,4 @@ name: bloom
 description: A sample command-line application
 dependencies:
   image: any
+  unittest: any
