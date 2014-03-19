@@ -8,27 +8,25 @@ class Petal {
   final int age;
   final int marker;
   final BitList mask;
+  int maskdeg;
 
-  Petal(this.rng, this.chromosomes, this.generation, this.age, this.marker, this.mask);
+  Petal(this.rng, this.chromosomes, this.generation, this.age, this.marker, this.mask) {
+    maskdeg = decodeMaskDeg(chromosomes[2]);
+  }
 
   Petal.start(this.rng, this.chromosomes, this.generation, this.marker)
       : age = 0,
-        mask = new BitList.ofLength(128);
+        mask = new BitList.ofLength(128) {
+    maskdeg = decodeMaskDeg(chromosomes[2]);
+  }
 
   Petal grow() {
     BitList dmask = mask.copy();
     
+    for ( int i = 0; i < maskdeg; i++ ) {
+      dmask[rng.nextInt(dmask.length)] = true;
+    }
     
-    
-    dmask[rng.nextInt(dmask.length)] = true;
-    dmask[rng.nextInt(dmask.length)] = true;
-    dmask[rng.nextInt(dmask.length)] = true;
-    dmask[rng.nextInt(dmask.length)] = true;
-    dmask[rng.nextInt(dmask.length)] = true;
-    dmask[rng.nextInt(dmask.length)] = true;
-    dmask[rng.nextInt(dmask.length)] = true;
-    dmask[rng.nextInt(dmask.length)] = true;
-    dmask[rng.nextInt(dmask.length)] = true;
     return new Petal(rng, chromosomes, generation, age + 1, marker, dmask);
   }
 
@@ -99,6 +97,11 @@ class Petal {
 
 int decodeMaskDeg(Dna dna) {
   Iterator<Codon> iter = dna.codonIterator;
+  List<int> proteins = new List();
+  while (iter.moveNext()) {
+    proteins.add(iter.current.decode());
+  }
+  return 2 + formChannel(proteins.iterator) ~/ 64;
 }
 
 int decodeColour(Dna dna) {
@@ -109,6 +112,7 @@ int decodeColour(Dna dna) {
   }
   return formColour(proteins.iterator);
 }
+
 
 int formColour(Iterator<int> iter) {
   int r = formChannel(iter);

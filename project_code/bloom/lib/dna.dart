@@ -90,6 +90,38 @@ class RandomDna {
   }
 }
 
+List<Dna> breed(List<Dna> a, List<Dna> b) {
+
+
+  Random rng = new Random();
+
+  bool r1 = true;
+  bool r2 = true;
+  bool r3 = true;
+  
+  while (r1 == r2 && r2 == r3) {
+    r1 = rng.nextBool();
+    r2 = rng.nextBool();
+    r3 = rng.nextBool();
+  }
+  
+  var result = new List<Dna>();
+  result.add(r1 ? a[0] : b[0]);
+  result.add(r2 ? a[1] : b[1]);
+  result.add(r3 ? a[2] : b[2]);
+  
+  if (rng.nextInt(4) == 0) {
+    int i = rng.nextInt(result.length);
+    int j = rng.nextInt(result.length);
+    Dna x = result[i];
+    result[i] = result[j];
+    result[j] = x;
+  }
+
+  return result;
+}
+
+
 Dna cross(Dna a, Dna b, ByteList mask) {
   Dna result = new Dna.ofLength(a.length);
   for (int i = 0; i < a.sequence.bytes.length; i++) {
@@ -101,7 +133,6 @@ Dna cross(Dna a, Dna b, ByteList mask) {
   }
   return result;
 }
-
 
 class Chromosomes extends ListBase<Dna> {
   final List<Dna> chromosomes;
@@ -126,7 +157,8 @@ class Chromosomes extends ListBase<Dna> {
     chromosomes.forEach((dna) {
       int y = 0;
       dna.forEach((b) {
-        image = fillRect(image, x, y, x + w, y + d, b ? decodeColour(dna) : white);
+        image = fillRect(image, x, y, x + w, y + d, b ? decodeColour(dna) :
+            white);
         y = y + d;
       });
       x = x + w + gap;
