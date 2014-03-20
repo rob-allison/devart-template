@@ -141,28 +141,28 @@ class RandomDna {
 
 List<Dna> breed(Random rng, RandomDna rdna, List<Dna> a, List<Dna> b) {
 
-  List<List<int>> combs = combinations();
-  List<int> comb = combs[rng.nextInt(combs.length)];
-  
-  List<Dna> result = new List(3);
-  for ( int i = 0; i < 3; i++ ) {
-    switch ( comb[i] ) {
-      case 0:
-        result[i] = a[i];
-        break;
-      case 1:
-        result[i] = b[i];
-        break;
-      case 2:
-        result[i] = intermingle(rng, a[i], b[i]);
-        break;
-      case 3:
-        result[i] = rdna.build();
-        break;
+  List<Dna> result = new List(a.length);
+  for ( int i = 0; i < a.length; i++ ) {
+    int x = rng.nextInt(100);
+    if ( x < 40 ) {
+      result[i] = a[i];
+    }
+    if ( x < 80 ) {
+      result[i] = b[i];
+    }
+    else {
+      result[i] = intermingle(rng, a[i], b[i]);
     }
   }
   
-  if (rng.nextInt(6) == 0) {
+  // mutate
+  if (rng.nextInt(100) < 10) {
+    int i = rng.nextInt(result.length);
+    result[i] = mutate( rng, result[i]);
+  }
+  
+  // swap
+  if (rng.nextInt(100) < 10) {
     int i = rng.nextInt(result.length);
     int j = rng.nextInt(result.length);
     Dna x = result[i];
@@ -173,16 +173,15 @@ List<Dna> breed(Random rng, RandomDna rdna, List<Dna> a, List<Dna> b) {
   return result;
 }
 
-List<List<int>> combinations( ) {
-  var result = new List( );
-  for ( int i = 0; i < 4; i++ ) {
-    for ( int j = 0; j < 4; j++ ) {
-      for ( int k = 0; k < 4; k++ ) {
-        if (!( i == 0 && j == 0 && k == 0 ) && !( i == 1 && j == 1 && k == 1 )) {
-          result.add([i,j,k]);
-        }
-      }
-    }
+Dna mutate( Random rng, Dna dna ) {
+  Dna result = dna.copy();
+  int factor = 4;
+  int offset = rng.nextInt(dna.length );
+  int window = rng.nextInt(dna.length ~/ factor );
+  bool b = rng.nextBool();
+  CircularList<bool> cl = new CircularList(result, offset );
+  for ( int i = 0; i < cl.length; i++ ) {
+    cl[i] = b;
   }
   return result;
 }

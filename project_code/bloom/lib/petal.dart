@@ -16,25 +16,24 @@ class Petal {
   Petal.start(this.rng, this.chromosomes, this.generation, this.marker)
       : age = 0,
         mask = new BitList.ofLength(128) {
-    
+
     proteins = new List();
-    chromosomes.forEach((d){
+    chromosomes.forEach((d) {
       proteins.add(d.decode());
     });
-    
-    maskfactor = getMaskDegradeFactor(proteins[2][0]);
+
+    maskfactor = getMaskFactor(proteins[2][0]);
   }
 
   Petal grow() {
-    BitList dmask = mask.copy();
-    for ( int i = 0; i < maskfactor; i++ ) {
-      dmask[rng.nextInt(dmask.length)] = true;
-    }
-    return new Petal(rng, chromosomes, generation, age + 1, marker, dmask, proteins, maskfactor);
+    BitList dmask = deepenMask(rng, mask, maskfactor);
+    return new Petal(rng, chromosomes, generation, age + 1, marker, dmask,
+        proteins, maskfactor);
   }
 
   Petal divide() {
-    return new Petal(rng, chromosomes, generation, age, marker, mask, proteins, maskfactor );
+    return new Petal(rng, chromosomes, generation, age, marker, mask, proteins,
+        maskfactor);
   }
 
   int toColour() {
@@ -46,25 +45,31 @@ class Petal {
   }
 }
 
-int getMaskDegradeFactor(Protein p) {
+BitList deepenMask(Random rng, BitList mask, int maskfactor ) {
+  BitList dmask = mask.copy();
+  for (int i = 0; i < maskfactor; i++) {
+    dmask[rng.nextInt(dmask.length)] = true;
+  }
+  return dmask;
+}
+
+int getMaskFactor(Protein p) {
   int sum = 0;
-  p.acids.forEach((a)
-  {
+  p.acids.forEach((a) {
     sum += a.value;
   });
   return 2 + (sum ~/ 64);
 }
 
-int getChannel(Protein inner, Protein outer, Iterator<bool> iterm ) {
+int getChannel(Protein inner, Protein outer, Iterator<bool> iterm) {
   int sum = 0;
   Iterator<Acid> iteri = inner.acids.iterator;
   Iterator<Acid> itero = outer.acids.iterator;
-  while(iteri.moveNext()) {
+  while (iteri.moveNext()) {
     itero.moveNext();
     iterm.moveNext();
     sum += iterm.current ? iteri.current.value : itero.current.value;
   }
   return (sum + 16) ~/ 2;
 }
-
 
