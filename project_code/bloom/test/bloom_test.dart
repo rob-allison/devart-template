@@ -11,10 +11,10 @@ void main() {
     expect(new Dna.fromString("1000011001001000").toString(), equals(
         "1000011001001000"));
   });
-  
+
   test("length", () {
-     Dna dna = new Dna.ofLength(16);
-     expect( dna.length, equals(16));
+    Dna dna = new Dna.ofLength(16);
+    expect(dna.length, equals(16));
   });
 
   test("set", () {
@@ -37,12 +37,12 @@ void main() {
     expect(dna[5], equals(true));
     expect(dna[10], equals(false));
   });
-  
+
   test("iterator", () {
     Dna dna = new Dna.ofLength(16);
     var iter = dna.iterator;
-    while ( iter.moveNext() ) {
-      expect( iter.current, equals(false) );
+    while (iter.moveNext()) {
+      expect(iter.current, equals(false));
     }
   });
 
@@ -65,16 +65,15 @@ void main() {
     iter.current = true;
     expect(dna.toString(), equals("0100000000010000"));
   });
-/*
-  test("sum/avg", () {
-    Dna dna = new Dna.ofLength(16);
-    dna[0] = true;
-    dna[5] = true;
-    dna[9] = true;
-    dna[10] = true;
-    
-    
-    expect(dna.sum, equals(4));
-    expect(dna.average, equals(0.25));
-  });*/
+
+  test("proteins", () {
+    Dna dna = new Dna.fromString(BitList.clean(
+        "1000011001001000 0100000000010000 0100000000010000 1101000101001111 0101011100110011 1100111010011100 0011001101110101 0100011100110111"
+        ));
+    List<Protein> proteins = dna.decode();
+    expect(proteins.length, equals(1));
+    Protein p = proteins[0];
+    expect(p.toString(), equals("864840104010d14f5733ce9c33754737"));
+    expect(p.evaluate(), equals(94));
+  });
 }

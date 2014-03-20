@@ -68,6 +68,11 @@ class SubList<E> extends ListBase<E>{
 
 class BitList extends ListBase<bool> {
 
+  static String clean( String str ) {
+    Pattern pattern = new RegExp(" ");
+    return str.replaceAll(pattern, "");
+  }
+  
   final ByteList bytes;
 
   BitList(this.bytes);
@@ -78,7 +83,7 @@ class BitList extends ListBase<bool> {
       this[i] = str[i] == "1"[0];
     }
   }
-
+  
   BitList.ofLength(int length): bytes = new ByteList.ofLength(length ~/ 8);
 
   bool operator [](int i) => (bytes[i ~/ 8] & (1 << (i % 8))) != 0;
@@ -103,11 +108,11 @@ class BitList extends ListBase<bool> {
   }
 
   String toString() {
-    String result = "";
+    StringBuffer sb = new StringBuffer( );
     this.forEach((b) {
-      result += b ? "1" : "0";
+      sb.write( b ? "1" : "0" );
     });
-    return result;
+    return sb.toString();
   }
 }
 

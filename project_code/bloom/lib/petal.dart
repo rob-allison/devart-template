@@ -8,125 +8,63 @@ class Petal {
   final int age;
   final int marker;
   final BitList mask;
-  int maskdeg;
+  List<List<Protein>> proteins;
+  int maskfactor;
 
-  Petal(this.rng, this.chromosomes, this.generation, this.age, this.marker, this.mask) {
-    maskdeg = decodeMaskDeg(chromosomes[2]);
-  }
+  Petal(this.rng, this.chromosomes, this.generation, this.age, this.marker, this.mask, this.proteins, this.maskfactor);
 
   Petal.start(this.rng, this.chromosomes, this.generation, this.marker)
       : age = 0,
         mask = new BitList.ofLength(128) {
-    maskdeg = decodeMaskDeg(chromosomes[2]);
+    
+    proteins = new List();
+    chromosomes.forEach((d){
+      proteins.add(d.decode());
+    });
+    
+    maskfactor = getMaskDegradeFactor(proteins[2][0]);
   }
 
   Petal grow() {
     BitList dmask = mask.copy();
-    
-    for ( int i = 0; i < maskdeg; i++ ) {
+    for ( int i = 0; i < maskfactor; i++ ) {
       dmask[rng.nextInt(dmask.length)] = true;
     }
-    
-    return new Petal(rng, chromosomes, generation, age + 1, marker, dmask);
+    return new Petal(rng, chromosomes, generation, age + 1, marker, dmask, proteins, maskfactor);
   }
 
   Petal divide() {
-    return new Petal(rng, chromosomes, generation, age, marker, mask);
+    return new Petal(rng, chromosomes, generation, age, marker, mask, proteins, maskfactor );
   }
 
   int toColour() {
-
-    Dna inner = chromosomes[0];
-    Dna outer = chromosomes[1];
-    //Dna mask = chromosomes[2];
-
-    //Dna col = cross(inner, outer, mask.sequence);
-    /*
-    Dna col = new Dna( inner.length() );
-    for ( int i = 0; i < age; i++ ) {
-      col[i] = outer[i];
-    }
-    for ( int i = age; i < inner.length(); i++ ) {
-      col[i] = inner[i];
-    }*/
-
-    //print(mask);
-
-    //return dnaToColour(col);
-    /*
-    switch (marker) {
-      case 0:
-        return getColor(100, 0, 0);
-        break;
-      case 1:
-        return getColor(100, 100, 0);
-        break;
-      case 2:
-        return getColor(0, 100, 0);
-        break;
-      case 3:
-        return getColor(0, 0, 100);
-        break;
-    }
-
-    throw "not reachable";*/
-
-    Iterator<Codon> itera = chromosomes[0].codonIterator;
-    Iterator<Codon> iterb = chromosomes[1].codonIterator;
     Iterator<bool> iterm = mask.iterator;
-
-    List<int> proteins = new List();
-    while (itera.moveNext()) {
-      iterb.moveNext();
-      iterm.moveNext();
-      proteins.add(iterm.current ? itera.current.decode() :
-          iterb.current.decode());
-    }
-
-    return formColour(proteins.iterator);
-  }
-
-  void degenerate(Dna dna, int deg) {
-    for (var iter = dna.modifyingIterator; iter.moveNext(); ) {
-      if (rng.nextInt(512) < deg) {
-        iter.current = true;
-      }
-    }
+    int r = getChannel(proteins[0][0], proteins[1][0], iterm);
+    int g = getChannel(proteins[0][1], proteins[1][1], iterm);
+    int b = getChannel(proteins[0][2], proteins[1][2], iterm);
+    return getColor(r, g, b);
   }
 }
 
-int decodeMaskDeg(Dna dna) {
-  Iterator<Codon> iter = dna.codonIterator;
-  List<int> proteins = new List();
-  while (iter.moveNext()) {
-    proteins.add(iter.current.decode());
-  }
-  return 2 + formChannel(proteins.iterator) ~/ 64;
-}
-
-int decodeColour(Dna dna) {
-  Iterator<Codon> iter = dna.codonIterator;
-  List<int> proteins = new List();
-  while (iter.moveNext()) {
-    proteins.add(iter.current.decode());
-  }
-  return formColour(proteins.iterator);
-}
-
-
-int formColour(Iterator<int> iter) {
-  int r = formChannel(iter);
-  int g = formChannel(iter);
-  int b = formChannel(iter);
-  return getColor(r, g, b);
-}
-
-int formChannel(Iterator<int> iter) {
+int getMaskDegradeFactor(Protein p) {
   int sum = 0;
-  for (int i = 0; i < 32; i++) {
-    iter.moveNext();
-    sum += iter.current;
-  }
-  sum += 16;
-  return sum ~/ 2;
+  p.acids.forEach((a)
+  {
+    sum += a.value;
+  });
+  return 2 + (sum ~/ 64);
 }
+
+int getChannel(Protein inner, Protein outer, Iterator<bool> iterm ) {
+  int sum = 0;
+  Iterator<Acid> iteri = inner.acids.iterator;
+  Iterator<Acid> itero = outer.acids.iterator;
+  while(iteri.moveNext()) {
+    itero.moveNext();
+    iterm.moveNext();
+    sum += iterm.current ? iteri.current.value : itero.current.value;
+  }
+  return (sum + 16) ~/ 2;
+}
+
+

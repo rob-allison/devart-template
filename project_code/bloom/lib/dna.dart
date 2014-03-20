@@ -33,6 +33,23 @@ class Dna extends ListBase<bool> {
   String toString() {
     return sequence.toString();
   }
+  
+  List<Protein> decode() {
+    List<Protein> proteins = new List( );
+    int i = 0;
+    Protein p = new Protein();
+    CodonIterator iter = codonIterator;
+    while ( iter.moveNext() ) {
+      p.acids[i] = iter.current.decode();
+      i++;
+      if ( i == Protein.length ) {
+        proteins.add(p);
+        i = 0;
+        p = new Protein( );
+      }
+    }
+    return proteins;
+  }
 }
 
 class CodonIterator extends Iterator<Codon> {
@@ -56,12 +73,44 @@ class Codon {
 
   Codon(this.dna, this.offset);
 
-  int decode() {
+  Acid decode() {
     int v = 0;
     for (int i = 0; i < length; i++) {
-      v += dna[offset] ? pow(2, i) : 0;
+      v += dna[offset + i] ? pow(2, length - 1 - i) : 0;
     }
-    return v;
+    return new Acid(v);
+  }
+}
+
+class Acid {
+  final int value;
+  Acid( this.value);
+  
+  String toString( ) {
+    return value.toRadixString(16);
+  }
+}
+
+class Protein {
+  static final int length = 32;
+  final List<Acid> acids;
+  Protein( ) : acids = new List(length);
+  
+  int evaluate() {
+    int sum = 0;
+    acids.forEach((a){
+      sum += a.value;
+    });
+    sum += 16;
+    return sum ~/ 2;
+  }
+  
+  String toString( ) {
+    StringBuffer sb = new StringBuffer();
+    acids.forEach((a){
+      sb.write(a.toString());
+    });
+    return sb.toString();
   }
 }
 
@@ -90,27 +139,30 @@ class RandomDna {
   }
 }
 
-List<Dna> breed(List<Dna> a, List<Dna> b) {
+List<Dna> breed(Random rng, RandomDna rdna, List<Dna> a, List<Dna> b) {
 
-
-  Random rng = new Random();
-
-  bool r1 = true;
-  bool r2 = true;
-  bool r3 = true;
+  List<List<int>> combs = combinations();
+  List<int> comb = combs[rng.nextInt(combs.length)];
   
-  while (r1 == r2 && r2 == r3) {
-    r1 = rng.nextBool();
-    r2 = rng.nextBool();
-    r3 = rng.nextBool();
+  List<Dna> result = new List(3);
+  for ( int i = 0; i < 3; i++ ) {
+    switch ( comb[i] ) {
+      case 0:
+        result[i] = a[i];
+        break;
+      case 1:
+        result[i] = b[i];
+        break;
+      case 2:
+        result[i] = intermingle(rng, a[i], b[i]);
+        break;
+      case 3:
+        result[i] = rdna.build();
+        break;
+    }
   }
   
-  var result = new List<Dna>();
-  result.add(r1 ? a[0] : b[0]);
-  result.add(r2 ? a[1] : b[1]);
-  result.add(r3 ? a[2] : b[2]);
-  
-  if (rng.nextInt(4) == 0) {
+  if (rng.nextInt(6) == 0) {
     int i = rng.nextInt(result.length);
     int j = rng.nextInt(result.length);
     Dna x = result[i];
@@ -121,12 +173,26 @@ List<Dna> breed(List<Dna> a, List<Dna> b) {
   return result;
 }
 
+List<List<int>> combinations( ) {
+  var result = new List( );
+  for ( int i = 0; i < 4; i++ ) {
+    for ( int j = 0; j < 4; j++ ) {
+      for ( int k = 0; k < 4; k++ ) {
+        if (!( i == 0 && j == 0 && k == 0 ) && !( i == 1 && j == 1 && k == 1 )) {
+          result.add([i,j,k]);
+        }
+      }
+    }
+  }
+  return result;
+}
 
-Dna cross(Dna a, Dna b, ByteList mask) {
+
+Dna intermingle(Random rng, Dna a, Dna b ) {
   Dna result = new Dna.ofLength(a.length);
   for (int i = 0; i < a.sequence.bytes.length; i++) {
-    int amask = mask[i];
-    int bmask = ~mask[i];
+    int amask = rng.nextInt(256);
+    int bmask = ~amask;
     int apart = a.sequence.bytes[i] & amask;
     int bpart = b.sequence.bytes[i] & bmask;
     result.sequence.bytes[i] = apart | bpart;
@@ -134,35 +200,4 @@ Dna cross(Dna a, Dna b, ByteList mask) {
   return result;
 }
 
-class Chromosomes extends ListBase<Dna> {
-  final List<Dna> chromosomes;
 
-  Chromosomes(this.chromosomes);
-
-  Dna operator [](int i) => chromosomes[i];
-
-  void operator []=(int i, Dna value) {
-    chromosomes[i] = value;
-  }
-
-  int get length => chromosomes.length;
-
-  void set length(int length) => throw "unmodifiable length";
-
-  Image render(int w, int d, int gap, int white, int black) {
-    Image image = new Image((w + gap) * chromosomes.length - gap, d *
-        chromosomes[0].length);
-
-    int x = 0;
-    chromosomes.forEach((dna) {
-      int y = 0;
-      dna.forEach((b) {
-        image = fillRect(image, x, y, x + w, y + d, b ? decodeColour(dna) :
-            white);
-        y = y + d;
-      });
-      x = x + w + gap;
-    });
-    return image;
-  }
-}
