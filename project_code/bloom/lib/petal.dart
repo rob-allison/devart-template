@@ -9,9 +9,10 @@ class Petal {
   final int marker;
   BitList mask;
   List<List<Protein>> proteins;
-  int maskfactor;
+  int agemaskfactor;
+  int genmaskfactor;
 
-  Petal(this.rng, this.chromosomes, this.generation, this.age, this.marker, this.mask, this.proteins, this.maskfactor);
+  Petal(this.rng, this.chromosomes, this.generation, this.age, this.marker, this.mask, this.proteins, this.agemaskfactor, this.genmaskfactor);
 
   Petal.start(this.rng, this.chromosomes, this.generation, this.marker)
       : age = 0,
@@ -22,20 +23,21 @@ class Petal {
       proteins.add(d.decode());
     });
 
-    maskfactor = getMaskFactor(proteins[2][0]);
+    agemaskfactor = getMaskFactor(proteins[2][0]);
+    genmaskfactor = getMaskFactor(proteins[2][1]);
     
-    mask = deepenMask(rng, mask, (64 - generation) * maskfactor);
+    mask = deepenMask(rng, mask, (64 - generation) * genmaskfactor);
   }
 
   Petal grow() {
-    BitList dmask = deepenMask(rng, mask, maskfactor );
+    BitList dmask = deepenMask(rng, mask, agemaskfactor );
     return new Petal(rng, chromosomes, generation, age + 1, marker, dmask,
-        proteins, maskfactor);
+        proteins, agemaskfactor, genmaskfactor);
   }
 
   Petal divide() {
     return new Petal(rng, chromosomes, generation, age, marker, mask, proteins,
-        maskfactor);
+        agemaskfactor,genmaskfactor);
   }
 
   int toColour() {
