@@ -180,7 +180,7 @@ Dna mutate( Random rng, Dna dna ) {
   int window = rng.nextInt(dna.length ~/ factor );
   bool b = rng.nextBool();
   CircularList<bool> cl = new CircularList(result, offset );
-  for ( int i = 0; i < cl.length; i++ ) {
+  for ( int i = 0; i < window; i++ ) {
     cl[i] = b;
   }
   return result;
@@ -188,14 +188,31 @@ Dna mutate( Random rng, Dna dna ) {
 
 
 Dna intermingle(Random rng, Dna a, Dna b ) {
+  
+  int window = 20;
   Dna result = new Dna.ofLength(a.length);
+  int n = rng.nextInt(window);
+  bool f = rng.nextBool();
+  int i = 0;
+  for (var iter = result.modifyingIterator; iter.moveNext(); ) {
+    iter.current = f ? a[i] : b[i];
+    if (i == n) {
+      n += 1 + rng.nextInt(window);
+      f = rng.nextBool();
+    }
+    i++;
+  }
+ 
+  /*
+  
   for (int i = 0; i < a.sequence.bytes.length; i++) {
     int amask = rng.nextInt(256);
     int bmask = ~amask;
     int apart = a.sequence.bytes[i] & amask;
     int bpart = b.sequence.bytes[i] & bmask;
     result.sequence.bytes[i] = apart | bpart;
-  }
+  }*/
+  
   return result;
 }
 

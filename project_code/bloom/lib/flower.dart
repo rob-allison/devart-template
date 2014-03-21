@@ -24,6 +24,23 @@ class Flower {
     });
     return image;
   }
+  
+  Image renderDna(int w, int d, int gap, int white, int black) {
+    Image image = new Image((w + gap) * chromosomes.length - gap, d *
+        chromosomes[0].length);
+
+    int x = 0;
+    chromosomes.forEach((dna) {
+      int y = 0;
+      dna.forEach((b) {
+        image = fillRect(image, x, y, x + w, y + d, b ? black :
+            white);
+        y = y + d;
+      });
+      x = x + w + gap;
+    });
+    return image;
+  }
 
   Flower grow() {
 

@@ -7,7 +7,7 @@ class Petal {
   final int generation;
   final int age;
   final int marker;
-  final BitList mask;
+  BitList mask;
   List<List<Protein>> proteins;
   int maskfactor;
 
@@ -23,10 +23,12 @@ class Petal {
     });
 
     maskfactor = getMaskFactor(proteins[2][0]);
+    
+    mask = deepenMask(rng, mask, (64 - generation) * maskfactor);
   }
 
   Petal grow() {
-    BitList dmask = deepenMask(rng, mask, maskfactor);
+    BitList dmask = deepenMask(rng, mask, maskfactor );
     return new Petal(rng, chromosomes, generation, age + 1, marker, dmask,
         proteins, maskfactor);
   }
@@ -58,7 +60,7 @@ int getMaskFactor(Protein p) {
   p.acids.forEach((a) {
     sum += a.value;
   });
-  return 2 + (sum ~/ 64);
+  return 1 + (sum ~/ 128);
 }
 
 int getChannel(Protein inner, Protein outer, Iterator<bool> iterm) {

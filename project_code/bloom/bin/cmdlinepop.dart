@@ -9,7 +9,7 @@ main() {
   RandomDna rdna = new RandomDna(rng, 512);
   List<List<Dna>> dnas = new List();
   int f = 0;
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < 10; i++) {
     List<Dna> dna = [rdna.build(), rdna.build(), rdna.build()];
     grow(rng, dna, f++);
     dnas.add(dna);
@@ -45,30 +45,31 @@ main() {
   }
 */
 
-/*
+
   
-  for ( int i = 0; i < 100; i++ ) {
+  for ( int i = 0; i < 10000; i++ ) {
     int a = dnas.length - rng.nextInt(10) - 1;
     int b = dnas.length - rng.nextInt(10) - 1;
     print(a.toString()+" "+b.toString());
     List<Dna> dna = breed(rng, rdna, dnas[a], dnas[b]);
-    grow(rng,dna,f++);
+    if (i % 100 == 0 ) grow(rng,dna,f++);
     dnas.add(dna);
   }
-*/
+
 }
 
 void grow(Random rng, List<Dna> dna, int f) {
   Flower flower = new Flower.start(rng, dna);
   for (int i = 0; i < 64; i++) {
-    render(flower, i);
+    //render(flower, i);
     flower = flower.grow();
   }
-  //render(flower, f);
+  render(flower, f);
 }
 
 render(Flower flower, int i) {
   Image im = flower.render(64, 1, 0);
+  //Image im = flower.renderDna(10,1,0,getColor(255, 255, 255),getColor(0, 0, 0));
   List<int> png = encodePng(im);
   String istr = i.toString();
   if (i < 10) {
@@ -77,7 +78,7 @@ render(Flower flower, int i) {
   if (i < 100) {
     istr = "0" + istr;
   }
-  new File("/home/rob/pop/img$istr.png")..writeAsBytesSync(png);
+  new File("/home/rob/dna/img$istr.png")..writeAsBytesSync(png);
 }
 
 
