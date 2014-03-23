@@ -86,6 +86,12 @@ class BitList extends ListBase<bool> {
   
   BitList.ofLength(int length): bytes = new ByteList.ofLength(length ~/ 8);
 
+  BitList.ofLengthWithOnes(int length): bytes = new ByteList.ofLength(length ~/ 8) {
+    for ( int i = 0; i < length; i++ ) {
+      this[i] = true;
+    }
+  }
+  
   bool operator [](int i) => (bytes[i ~/ 8] & (1 << (i % 8))) != 0;
 
   void operator []=(int i, bool value) {
@@ -114,6 +120,14 @@ class BitList extends ListBase<bool> {
     });
     return sb.toString();
   }
+  
+  BitList subList( int offset, int length ) {
+    BitList result = new BitList.ofLength(length);
+    for ( int i = 0; i < length; i++ ) {
+      result[i] = this[offset+i];
+    }
+    return result;
+  }
 }
 
 class ModifyingIterator<E> extends Iterator<E> {
@@ -134,7 +148,7 @@ class ModifyingIterator<E> extends Iterator<E> {
     }
   }
 
-  bool get current => iter.current;
+  E get current => iter.current;
 
   void set current(E e) {
     list[i] = e;

@@ -15,10 +15,14 @@ class Flower {
   Image render(int r, int dpb, [int gap = 0]) {
     int side = r * 2 * (dpb + gap);
     Image image = new Image(side, side);
+    return renderOn(image, r, r, dpb);
+  }
+  
+  Image renderOn(Image image, int x, int y, int dpb, [int gap = 0]) {
     petals.forEach((p, c) {
-      int x1 = (r + p.x) * (dpb + gap);
+      int x1 = (x + p.x) * (dpb + gap);
       int x2 = x1 + dpb - 1;
-      int y1 = (r + p.y) * (dpb + gap);
+      int y1 = (y + p.y) * (dpb + gap);
       int y2 = y1 + dpb - 1;
       image = fillRect(image, x1, y1, x2, y2, c.toColour());
     });
