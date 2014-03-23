@@ -10,7 +10,7 @@ By starting the mask with all 0s, and randomly setting bits until ending with al
 
 More examples:
 
-![Examples](../project_images/masking3.png?raw=true "Examples")
+![Examples](../project_images/masking3fixed.png?raw=true "Examples")
 
 ## Flower Growth
 
