@@ -14,7 +14,7 @@ More examples:
 
 ## Flower Growth
 
-Using the logical scaffolding developed previously, and controlling the 'opacity' (from all 0s to all 1s) of the mask with petal age and generation, a convincing flower growth animation is produced. The effect of petal age and generation on the mask (how quickly or slowly is opacifies) is controlled by another strand of bDNA, hence each flower is defined by three bDNA strands - represented vertically here:
+Using the logical scaffolding developed previously, and controlling the 'opacity' (from all 0s to all 1s) of the mask with petal age and generation, a convincing flower growth animation is produced. The effect of petal age and generation on the mask (how quickly or slowly it opacifies) is controlled by another strand of bDNA, hence each flower is defined by three bDNA strands - represented vertically here:
 
 ![Flower Growth](../project_images/flowergrow.png?raw=true "Flower Growth")
 
