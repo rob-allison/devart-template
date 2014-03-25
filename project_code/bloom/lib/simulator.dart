@@ -22,7 +22,7 @@ class Simulator {
     RandomDna rdna = new RandomDna(rng, 512);
     for (int i = 0; i < n; i++) {
       pots[rng.nextInt(pots.length)].plant(rng, [rdna.build(), rdna.build(),
-          rdna.build()], rng.nextInt(100) );
+          rdna.build()], rng.nextInt(200));
     }
   }
 
@@ -33,14 +33,14 @@ class Simulator {
     Image image = new Image(xside, yside);
     fill(image, getColor(20, 20, 20));
     pots.forEach((pot) {
-      image = pot.renderOn(image);
+      image = pot.renderOn(image,routesInclude(pot));
     });
-    
-    routes.removeWhere((r) => r.age > 40 );
-    routes.forEach((r){
+
+    routes.removeWhere((r) => r.age > 40);
+    routes.forEach((r) {
       image = r.renderOn(image);
     });
-    
+
     return image;
   }
 
@@ -64,16 +64,14 @@ class Simulator {
     if (mature.length >= 2 && empty.length >= 1) {
       int i1 = rng.nextInt(mature.length);
       int i2 = i1;
-      while ( i1 == i2) {
+      while (i1 == i2) {
         i2 = rng.nextInt(mature.length);
       }
-      
+
       Pot p1 = mature[i1];
       Pot p2 = mature[i2];
       Pot p3 = empty[rng.nextInt(empty.length)];
-      
-      print( p1.toString() + " " + p2.toString() + " " + p3.toString() );
-      
+
       List<Dna> dna1 = p1.collect();
       List<Dna> dna2 = p2.collect();
       List<Dna> dna = breed(rng, dna1, dna2);
@@ -82,10 +80,19 @@ class Simulator {
     }
   }
 
+  bool routesInclude(Pot p) {
+    for ( Route r in routes ) {
+      if ( r.includes(p) ) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 class Pot {
 
+  static final int longevity = 900;
   final int x;
   final int y;
   Flower flower;
@@ -93,29 +100,43 @@ class Pot {
 
   Pot(this.x, this.y);
 
-  Image renderOn(Image image) {
+  Image renderOn(Image image, bool routed) {
     if (flower != null) {
       if (flower.radius < 64) {
         flower = flower.grow();
         age++;
-        image = fillRect(image, x - 64, y - 64, x + 63, y + 63, getColor(0, 0, 0));
-        return flower.renderOn(image, x, y, 1);
-      } else if (age < 500) {
+        image = fillRect(image, x - 64, y - 64, x + 63, y + 63, getColor(0, 0, 0
+            ));
+        image = flower.renderOn(image, x, y, 1);
+        if (routed) image = renderDnaOn(image);
+        return image;
+      } else if (age < longevity) {
         age++;
-        return flower.renderOn(image, x, y, 1);
-      } else if (age < 560) {
+        image = flower.renderOn(image, x, y, 1);
+        if (routed) image = renderDnaOn(image);
+        return image;
+      } else if (age < longevity + 60) {
         age++;
         Image im = flower.render(64, 1);
         im = grayscale(im);
-        im = brightness(im, 4 * (500 - age));
+        im = brightness(im, 4 * (longevity - age));
         return copyInto(image, im, dstX: x - 64, dstY: y - 64, srcX: 0, srcY: 0,
             srcW: 128, srcH: 128);
       } else {
         flower = null;
         age = null;
       }
-    } 
+    }
     return fillRect(image, x - 64, y - 64, x + 63, y + 63, getColor(0, 0, 0));
+  }
+
+  Image renderDnaOn(Image image) {
+    int w = 3;
+    Image dim = flower.renderDna(w, 1, 0, getColor(255, 255, 255), getColor(0,
+        0, 0));
+    dim = copyResize(dim, 3 * w, 128);
+    return copyInto(image, dim, dstX: x - 64, dstY: y - 64, srcX: 0, srcY: 0,
+        srcW: 3 * w, srcH: 128);
   }
 
   List<Dna> collect() {
@@ -130,7 +151,7 @@ class Pot {
   bool mature() {
     if (flower != null) {
       if (flower.radius == 64) {
-        if ( age < 500 ) {
+        if (age < longevity - 50) {
           return true;
         }
       }
@@ -146,8 +167,8 @@ class Pot {
     flower = new Flower.start(rng, dna);
     age = a;
   }
-  
-  String toString( ) {
+
+  String toString() {
     return x.toString() + "-" + y.toString();
   }
 }
@@ -157,28 +178,30 @@ class Route {
   final Pot p2;
   final Pot p3;
   int age = 0;
-  
-  Route(this.p1,this.p2,this.p3);
-  
-  Image renderOn( Image im ) {
+
+  Route(this.p1, this.p2, this.p3);
+
+  Image renderOn(Image im) {
     age++;
     im = drawPath(im, p1, p2);
     im = drawPath(im, p2, p3);
     return im;
   }
-  
-  Image drawPath( Image im, Pot a, Pot b ) {
-    //im = drawStep(im, a.x, a.y, b.x, a.y);
-    //im = drawStep(im, b.x, a.y, b.x, b.y);
-    im = drawStep(im, 64 + a.x, 64 + a.y, 74 + a.x, 74 + a.y);
-    im = drawStep(im, 74 + a.x, 74 + a.y, 74 + b.x, 74 + a.y);
-    im = drawStep(im, 74 + b.x, 74 + a.y, 74 + b.x, 74 + b.y);
-    im = drawStep(im, 64 + b.x, 64 + b.y, 74 + b.x, 74 + b.y);
+
+  Image drawPath(Image im, Pot a, Pot b) {
+    im = drawStep(im, a.x - 64, a.y + 64, a.x - 74, a.y + 74);
+    im = drawStep(im, a.x - 74, a.y + 74, b.x - 74, a.y + 74);
+    im = drawStep(im, b.x - 74, a.y + 74, b.x - 74, b.y + 74);
+    im = drawStep(im, b.x - 64, b.y + 64, b.x - 74, b.y + 74);
     return im;
   }
-  
-  Image drawStep( Image im, int ax, int ay, int bx, int by ) {
-    im = drawLine(im, ax, ay, bx, by, getColor(255, 255, 255) );
-    return drawLine(im, bx, by, ax, ay, getColor(255, 255, 255) );
+
+  Image drawStep(Image im, int ax, int ay, int bx, int by) {
+    im = drawLine(im, ax, ay, bx, by, getColor(255, 255, 255));
+    return drawLine(im, bx, by, ax, ay, getColor(255, 255, 255));
+  }
+
+  bool includes(Pot p) {
+    return p1 == p || p2 == p || p3 == p;
   }
 }

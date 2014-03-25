@@ -9,12 +9,12 @@ main() {
   RandomDna rdna = new RandomDna(rng, 512);
   List<List<Dna>> dnas = new List();
   int f = 0;
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 20; i++) {
     List<Dna> dna = [rdna.build(), rdna.build(), rdna.build()];
-    //grow(rng, dna, f++);
+    grow(rng, dna, f++);
     dnas.add(dna);
   }
-/*
+  /*
   print("ready");
   int a = 0;
   int b = 1;
@@ -46,29 +46,41 @@ main() {
 */
 
 
-  
-  for ( int i = 0; i < 100; i++ ) {
-    int a = dnas.length - rng.nextInt(10) - 1;
-    int b = dnas.length - rng.nextInt(10) - 1;
-    List<Dna> dna = breed(rng, rdna, dnas[a], dnas[b]);
-    if (i  == 99 ) grow(rng,dna,f++);
+
+  for (int i = 0; i < 200; i++) {
+    int a = dnas.length - rng.nextInt(min(dnas.length,60)) - 1;
+    int b = dnas.length - rng.nextInt(min(dnas.length,60)) - 1;
+    List<Dna> dna = breed(rng, dnas[a], dnas[b]);
+    grow(rng, dna, f++);
     dnas.add(dna);
   }
 
 }
 
 void grow(Random rng, List<Dna> dna, int f) {
+
   Flower flower = new Flower.start(rng, dna);
   for (int i = 0; i < 64; i++) {
-    render(flower, i);
+    new Directory("/home/rob/grow2/flower$f").create();
+    //renderFlower(flower, i, "grow2/flower$f");
     flower = flower.grow();
   }
-  //render(flower, f);
+  renderFlower(flower, f, "flowers2");
+  //renderDna(flower, f, "dna2");
 }
 
-render(Flower flower, int i) {
-  Image im = flower.render(64, 4, 0);
-  //Image im = flower.renderDna(10,1,0,getColor(255, 255, 255),getColor(0, 0, 0));
+renderDna(Flower flower, int i, String dir) {
+  Image dim = flower.renderDna(10, 1, 0, getColor(255, 255, 255), getColor(0, 0,
+      0));
+  write(dim, i, dir);
+}
+
+renderFlower(Flower flower, int i, String dir) {
+  Image fim = flower.render(64, 1, 0);
+  write(fim, i, dir);
+}
+
+void write(Image im, int i, String dir) {
   List<int> png = encodePng(im);
   String istr = i.toString();
   if (i < 10) {
@@ -77,7 +89,6 @@ render(Flower flower, int i) {
   if (i < 100) {
     istr = "0" + istr;
   }
-  new File("/home/rob/test/img$istr.png")..writeAsBytesSync(png);
+  new File("/home/rob/$dir/img$istr.png")..writeAsBytesSync(png);
 }
-
 
