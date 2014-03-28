@@ -102,7 +102,7 @@ This animation simulates a population of flowers, pollinated at random:
 
 http://youtu.be/B_uH1Exdfhw
 
-A Dart cmd line app is also provided at https://github.com/rob-allison/devart-template/blob/master/project_code/bloom/bin/cmdlinepop.dart - pass a directory as a cmd line arg and it will interactively populate it with flowers.
+A Dart cmd line app is also provided at https://github.com/rob-allison/devart-template/blob/master/project_code/bloom/bin/cmdlinepop.dart - pass a directory as a cmd line arg and it will interactively populate it, allowing you to choose which flowers to breed.
 
 ### User Interface
 
