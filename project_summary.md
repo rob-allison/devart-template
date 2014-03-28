@@ -19,7 +19,7 @@ This imagery is built up of over-sized pixels or blocks of colour, there is no a
 
 ### Growth
 
-Three strands of bDNA, or chromosomes, are used to define each flower - one for the outer colour, one the inner, and one to control the transition between inner and outer as the flower grows (the chromosomes are shown as vertical black(1) and white(0) stripe paterns):
+Three strands of bDNA, or chromosomes, are used to define each flower - one for the outer colour, one the inner, and one to control the transition between inner and outer as the flower grows (the chromosomes are shown as vertical black(1) and white(0) stripe patterns):
 
 ![Growth](project_images/flowergrow4.png?raw=true "Growth")
 
