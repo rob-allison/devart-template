@@ -1,14 +1,27 @@
 import 'package:bloom/bloom.dart';
 import 'package:image/image.dart';
+import 'dart:math';
 import 'dart:io';
 
 main() {
   
-  Simulator sim = new Simulator(5,5,20);
+  Random rng = new Random();
+  Simulator sim = new Simulator(rng,5,5,20);
   sim.initialise(12);
   for ( int i = 0; i < 5000; i++ ) {
-    if ( i % 50 == 0 ) sim.pollinate( );
-    write( sim.render(), i, "sim3");
+    if ( i % 100 == 0 || (i - 5) % 100 == 0) {
+      List<Pot> ma = sim.collectable();
+      if ( ma.isNotEmpty ) {
+        sim.pollinate( ma[rng.nextInt(ma.length)]);
+      }
+    }
+    if ( (i - 10) % 100 == 0) {
+      List<Pot> em = sim.empties();
+      if ( em.isNotEmpty ) {
+        sim.pollinate( em[rng.nextInt(em.length)]);
+      }
+    }
+    write( sim.render(), i, "sim5");
   }
 }
 

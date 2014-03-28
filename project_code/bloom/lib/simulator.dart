@@ -2,14 +2,14 @@ part of bloom;
 
 class Simulator {
 
-  final Random rng = new Random();
+  final Random rng;
   final List<Pot> pots = new List();
   final int xdim;
   final int ydim;
   final int gap;
-  final List<Route> routes = new List();
+  final List<Pollination> pollinations = new List();
 
-  Simulator(this.xdim, this.ydim, this.gap) {
+  Simulator(this.rng, this.xdim, this.ydim, this.gap) {
     for (int i = 0; i < xdim; i++) {
       for (int j = 0; j < ydim; j++) {
         pots.add(new Pot(gap + (i * (128 + gap)) + 64, gap + (j * (128 + gap)) +
@@ -21,11 +21,11 @@ class Simulator {
   void initialise(int n) {
     RandomDna rdna = new RandomDna(rng, 512);
     for (int i = 0; i < n; i++) {
-      pots[rng.nextInt(pots.length)].plant(rng, [rdna.build(), rdna.build(),
-          rdna.build()], rng.nextInt(200));
+      Flower flower = new Flower.start(rng, [rdna.build(), rdna.build(),
+                                                 rdna.build()]);
+      pots[rng.nextInt(pots.length)].plant(flower, rng.nextInt(200));
     }
   }
-
 
   Image render() {
     int xside = (xdim * 128) + ((xdim + 1) * gap);
@@ -33,66 +33,96 @@ class Simulator {
     Image image = new Image(xside, yside);
     fill(image, getColor(20, 20, 20));
     pots.forEach((pot) {
-      image = pot.renderOn(image,routesInclude(pot));
+      image = pot.renderOn(image);
     });
 
-    routes.removeWhere((r) => r.age > 40);
-    routes.forEach((r) {
+    pollinations.removeWhere((r) => r.age > 64);
+    pollinations.forEach((r) {
       image = r.renderOn(image);
     });
 
     return image;
   }
 
-
-  void pollinate() {
-
-    List<Pot> mature = new List();
-    pots.forEach((p) {
-      if (p.mature()) {
-        mature.add(p);
+  void pollinate(Pot p) {
+    if (pollinations.isEmpty) {
+      if (p.isMature()) {
+        Pollination pol = new Pollination();
+        pol.p1 = p;
+        pollinations.add(pol);
       }
-    });
-
-    List<Pot> empty = new List();
-    pots.forEach((p) {
-      if (p.empty()) {
-        empty.add(p);
+    } else {
+      Pollination last = pollinations.last;
+      if (last.p2 == null) {
+        if (p != last.p1 && p.isMature()) {
+          last.p2 = p;
+        }
+      } else if (last.p3 == null) {
+        if (p.isEmpty()) {
+          last.p3 = p;
+          List<Dna> dna1 = last.p1.collect();
+          List<Dna> dna2 = last.p2.collect();
+          List<Dna> dna = breed(rng, dna1, dna2);
+          Flower flower = new Flower.start(rng, dna);
+          last.p3.plant(flower);
+        }
+      } else {
+        Pollination pol = new Pollination();
+        pol.p1 = p;
+        pollinations.add(pol);
       }
-    });
+    }
 
-    if (mature.length >= 2 && empty.length >= 1) {
-      int i1 = rng.nextInt(mature.length);
-      int i2 = i1;
-      while (i1 == i2) {
-        i2 = rng.nextInt(mature.length);
+    List<Pot> ma = matures();
+    if (ma.length > xdim * ydim - 4) {
+      int age = 0;
+      Pot oldest = null;
+      ma.forEach((m) {
+        if (m.age > age) {
+          age = m.age;
+          oldest = m;
+        }
+      });
+      if (oldest != null) {
+        oldest.kill();
       }
-
-      Pot p1 = mature[i1];
-      Pot p2 = mature[i2];
-      Pot p3 = empty[rng.nextInt(empty.length)];
-
-      List<Dna> dna1 = p1.collect();
-      List<Dna> dna2 = p2.collect();
-      List<Dna> dna = breed(rng, dna1, dna2);
-      p3.plant(rng, dna);
-      routes.add(new Route(p1, p2, p3));
     }
   }
 
-  bool routesInclude(Pot p) {
-    for ( Route r in routes ) {
-      if ( r.includes(p) ) {
-        return true;
+  List<Pot> matures() {
+    List<Pot> matures = new List();
+    pots.forEach((p) {
+      if (p.isMature()) {
+        matures.add(p);
+      }
+    });
+    return matures;
+  }
+
+  List<Pot> collectable() {
+    List<Pot> coll = matures();
+    if (pollinations.isNotEmpty) {
+      if (pollinations.last.p2 == null) {
+        coll.remove(pollinations.last.p1);
       }
     }
-    return false;
+    return coll;
+  }
+
+  List<Pot> empties() {
+    List<Pot> empty = new List();
+    pots.forEach((p) {
+      if (p.isEmpty()) {
+        empty.add(p);
+      }
+    });
+    return empty;
   }
 }
 
 class Pot {
 
-  static final int longevity = 900;
+  int longevity = 10000000;
   final int x;
   final int y;
   Flower flower;
@@ -100,21 +130,17 @@ class Pot {
 
   Pot(this.x, this.y);
 
-  Image renderOn(Image image, bool routed) {
+  Image renderOn(Image image) {
     if (flower != null) {
       if (flower.radius < 64) {
         flower = flower.grow();
         age++;
         image = fillRect(image, x - 64, y - 64, x + 63, y + 63, getColor(0, 0, 0
             ));
-        image = flower.renderOn(image, x, y, 1);
-        if (routed) image = renderDnaOn(image);
-        return image;
+        return flower.renderOn(image, x, y, 1);
       } else if (age < longevity) {
         age++;
-        image = flower.renderOn(image, x, y, 1);
-        if (routed) image = renderDnaOn(image);
-        return image;
+        return flower.renderOn(image, x, y, 1);
       } else if (age < longevity + 60) {
         age++;
         Image im = flower.render(64, 1);
@@ -148,10 +174,10 @@ class Pot {
     return null;
   }
 
-  bool mature() {
+  bool isMature() {
     if (flower != null) {
       if (flower.radius == 64) {
-        if (age < longevity - 50) {
+        if (age < longevity) {
           return true;
         }
       }
@@ -159,13 +185,17 @@ class Pot {
     return false;
   }
 
-  bool empty() {
+  bool isEmpty() {
     return flower == null;
   }
 
-  void plant(Random rng, List<Dna> dna, [a = 0]) {
-    flower = new Flower.start(rng, dna);
+  void plant(Flower f, [int a = 0]) {
+    flower = f;
     age = a;
+  }
+
+  void kill() {
+    longevity = age;
   }
 
   String toString() {
@@ -173,18 +203,27 @@ class Pot {
   }
 }
 
-class Route {
-  final Pot p1;
-  final Pot p2;
-  final Pot p3;
+class Pollination {
+  Pot p1;
+  Pot p2;
+  Pot p3;
   int age = 0;
 
-  Route(this.p1, this.p2, this.p3);
+  Pollination();
 
   Image renderOn(Image im) {
-    age++;
-    im = drawPath(im, p1, p2);
-    im = drawPath(im, p2, p3);
+
+    im = p1.renderDnaOn(im);
+    if (p2 != null) {
+      im = p2.renderDnaOn(im);
+      im = drawPath(im, p1, p2);
+      if (p3 != null) {
+        im = p3.renderDnaOn(im);
+        im = drawPath(im, p2, p3);
+        age++;
+      }
+    }
+
     return im;
   }
 

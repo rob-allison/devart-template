@@ -142,15 +142,30 @@ class RandomDna {
 List<Dna> breed(Random rng, List<Dna> a, List<Dna> b) {
 
   List<Dna> result = new List(a.length);
+  int crosscheck = 0;
   for (int i = 0; i < a.length; i++) {
     int x = rng.nextInt(100);
     if (x < 40) {
       result[i] = a[i];
     } else if (x < 80) {
       result[i] = b[i];
+      crosscheck++;
     } else {
       result[i] = intermingle(rng, a[i], b[i]);
+      crosscheck = a.length + 1;
     }
+  }
+  
+  // prevent all a
+  if ( crosscheck == 0 ) {
+    int i = rng.nextInt(a.length);
+    result[i] = b[i];
+  }
+  
+  // prevent all b
+  if ( crosscheck == a.length ) {
+    int i = rng.nextInt(a.length);
+    result[i] = a[i];
   }
 
   // mutate

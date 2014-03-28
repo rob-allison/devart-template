@@ -12,17 +12,25 @@ class Flower {
 
   Flower(this.rng, this.chromosomes, this.radius);
 
+  Image renderWithDna( int dpb, int w ) {
+    int height = dpb * radius * 2;
+    int width = height + (w * 3);
+    Image image = new Image(width, height);
+    image = renderDnaOn(image, 0, 0, w, 512 ~/ height, 0, getColor(255, 255, 255), getColor(0, 0, 0));
+    return renderOn(image, (w * 3) + (height ~/ 2), height ~/ 2, dpb);
+  }
+  
   Image render(int r, int dpb, [int gap = 0]) {
     int side = r * 2 * (dpb + gap);
     Image image = new Image(side, side);
-    return renderOn(image, r, r, dpb);
+    return renderOn(image, r * dpb, r * dpb, dpb);
   }
   
   Image renderOn(Image image, int x, int y, int dpb, [int gap = 0]) {
     petals.forEach((p, c) {
-      int x1 = (x + p.x) * (dpb + gap);
+      int x1 = x + (p.x * (dpb + gap));
       int x2 = x1 + dpb - 1;
-      int y1 = (y + p.y) * (dpb + gap);
+      int y1 = y + (p.y * (dpb + gap));
       int y2 = y1 + dpb - 1;
       image = fillRect(image, x1, y1, x2, y2, c.toColour());
     });
@@ -31,21 +39,24 @@ class Flower {
   
   Image renderDna(int w, int d, int gap, int white, int black) {
     Image image = new Image((w + gap) * chromosomes.length - gap, d *
-        chromosomes[0].length);
-
-    int x = 0;
+            chromosomes[0].length);
+    return renderDnaOn(image, 0, 0, w, d, gap, white, black);
+  }
+  
+  Image renderDnaOn(Image image, int x, int y, int w, int d, int gap, int white, int black) {
+    int x1 = 0;
     chromosomes.forEach((dna) {
-      int y = 0;
+      int y1 = 0;
       dna.forEach((b) {
-        image = fillRect(image, x, y, x + w, y + d, b ? black :
+        image = fillRect(image, x + x1, y + y1, x + x1 + w, y + y1 + d, b ? black :
             white);
-        y = y + d;
+        y1 = y1 + d;
       });
-      x = x + w + gap;
+      x1 = x1 + w + gap;
     });
     return image;
   }
-
+  
   Flower grow() {
 
     int r = radius + 1;
@@ -113,3 +124,11 @@ class Flower {
     }
   }
 }
+
+Flower growFlowerTo( Flower flower, int r ) {
+  while ( flower.radius < r ) {
+    flower = flower.grow();
+  }
+  return flower;
+}
+

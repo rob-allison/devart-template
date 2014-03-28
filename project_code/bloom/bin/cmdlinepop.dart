@@ -59,14 +59,15 @@ main() {
 
 void grow(Random rng, List<Dna> dna, int f) {
 
+  print( f.toString() + " " + dna.toString() );
   Flower flower = new Flower.start(rng, dna);
   for (int i = 0; i < 64; i++) {
-    new Directory("/home/rob/grow2/flower$f").create();
-    //renderFlower(flower, i, "grow2/flower$f");
+    new Directory("/home/rob/grow3/flower$f").create();
+    renderFlower(flower, i, "grow3/flower$f");
     flower = flower.grow();
   }
-  renderFlower(flower, f, "flowers2");
-  //renderDna(flower, f, "dna2");
+  renderFlower(flower, f, "flowers3");
+  renderDna(flower, f, "dna3");
 }
 
 renderDna(Flower flower, int i, String dir) {
