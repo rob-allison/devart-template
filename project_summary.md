@@ -112,7 +112,7 @@ The simplest UI would have the population projected onto a screen, with tablets 
 
 Each visitor would be given an RFID card that they tap against two chosen parent flowers, before tapping on one (or more!) empty pots to grow the child flowers. The history of the population could be projected onto screens:
 
-![Population](project_images/froom4.png?raw=true "Population")
+![Population](project_images/froom5.png?raw=true "Population")
 
 Visitors become 'worker bees', pollinating this population of flowers as it grows and evolves. 
 
