@@ -118,7 +118,7 @@ This animation simulates a population of flowers, pollinated at random:
 
 The simplest UI would have the population projected onto a screen, with tablets allowing visitors to make their selections. However, a more ambitious approach would use pedastals - 'flower pots' - laid out in the gallery. Each visitor would be given an RFID card that they tap against their two chosen parent flowers, before tapping on one (or more!) empty pots to grow their flowers. The history of the population would be projected onto screens:
 
-![Population](../project_images/froom3.png?raw=true "Population")
+![Population](../project_images/froom4.png?raw=true "Population")
 
 Visitors become 'worker bees', pollinating this population of flowers as it grows and evolves. 
 
