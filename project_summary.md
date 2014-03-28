@@ -59,7 +59,7 @@ class Dna extends ListBase<bool> {
 
 By interchanging fragments of bDNA between two flowers, offspring may share traits from their parents:
 
-![Breeding](project_images/breed4.png?raw=true "Breeding")
+![Breeding](project_images/breed5.png?raw=true "Breeding")
 
 ```
 List<Dna> breed(Random rng, List<Dna> a, List<Dna> b) {
