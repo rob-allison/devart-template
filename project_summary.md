@@ -15,7 +15,7 @@ The proposal will explore:
 
 I hope to draw a parallel between DNA and source code, and to show how something almost natural can emerge from the purely computational when sufficiently complex.
 
-This imagery is built up of over-sized pixels or blocks of colour, there is no anti-aliasing, nor similar attempts to mimic the analogue. Its essential discrete, *pixelated,* nature is celebrated, not hidden.
+This imagery is built up of over-sized pixels or blocks of colour, there is no anti-aliasing or similar attempt to mimic the analogue. Its essential discrete, *pixelated,* nature is celebrated, not hidden.
 
 ### Growth
 
