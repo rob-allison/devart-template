@@ -1,13 +1,13 @@
 {
     "technologies": {
         "apis": [
-            
+            "dart:image"
         ],
         "platforms": [
             "Google Compute Engine"
         ],
         "toolkits": [
-            
+            "web"
         ]
     },
     "themes": [
