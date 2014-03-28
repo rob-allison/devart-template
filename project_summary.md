@@ -15,11 +15,11 @@ The proposal will explore:
 
 I hope to draw a parallel between DNA and source code, and to show how something almost natural can emerge from the purely computational when iterated to sufficient scale.
 
-This imagery is built up of over-sized pixels or blocks of colour, there is no anti-aliasing or similar attempts to coerce the digital medium into the smoothness of the analogue. It's essential discrete - pixelated - nature is celebrated, not hidden.
+This imagery is built up of over-sized pixels or blocks of colour, there is no anti-aliasing or similar attempts to coerce the digital medium into the smoothness of the analogue. It's essential discrete *pixelated* nature is celebrated, not hidden.
 
 ### Growth
 
-Three strands of bDNA, or chromosomes, are used to define each flower - one for the outer colour, one the inner, and one to control the transition between inner and outer as the flower grows (the chromosomes are shown as vertical black(1) and white(0) stripe patterns):
+Three strands of bDNA, or chromosomes, are used to define each flower - one for the outer colour, one the inner, and one to control the transition between inner and outer as the flower grows. The chromosomes are shown as vertical strips with black=1 and white=0:
 
 ![Growth](project_images/flowergrow4.png?raw=true "Growth")
 
