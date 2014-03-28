@@ -1,21 +1,120 @@
 # Bloom
 
-## Author
+### Author
 * Robert Allison - http://github.com/rob-allison
 
-## Description
-By using a kind of 'binary dna' to create individual colours I have been able to escape from the familiar RGB/HSV colour model and treat colour as the expression of a process. Previous experimentation can be found here:
+### Proposal
+By using a kind of binary DNA (bDNA) to create individual colours I can treat colour as the expression of a process. Previous experimentation can be found [here](http://www.robertallison.co.uk "Robert Allison").
 
-[Robert Allison](http://www.robertallison.co.uk "Robert Allison")
+I propose to create digital flowers, using bDNA as input. There would be a population of such flowers. Visitors would be able to select flowers to breed together and the resulting offspring would be added to the population. Flowers would have a lifespan, and would be removed after a certain time. During the course of the exhibition the nature of this flower population will shift and change as a result of this visitor directed pollination.
 
-The themes I want to explore are:
+The proposal will explore:
 * growth - how a simple genetic sequence is translated into a complex structure.
 * breeding - how two sequences combine to produce a third that expresses characteristics from its parents.
-* selection - how a population as a whole evolves under a selection pressure
+* selection - how a population as a whole evolves under a selection pressure.
 
-Underpinning all this is an effort to show how something almost natural can emerge from the purely computational when iterated to sufficient scale.
+I hope to draw a parallel between DNA and source code, and to show how something almost natural can emerge from the purely computational when iterated to sufficient scale.
 
-I propose to determine a method of constructing something resembling a flower, using 'binary dna' as input. There would be a population of such flowers. Visitors would be able to select flowers to breed together, the resulting offspring then added to the population. Flowers would have a lifespan, and would be removed after a certain time. This changing population would be displayed with a suitable taxonomy.
+This imagery is built up of over-sized pixels or blocks of colour, there is no anti-aliasing or similar attempts to coerce the digital medium into the smoothness of the analogue. It's essential discrete, pixelated, nature is celebrated, not hidden.
 
-Hence the exhibit would evolve according to the preferences of visitors, with potential for effects - for example speciation - that can be found in the natural world. 
+### Growth
+
+Three strands of bDNA, or chromosomes, are used to define each flower - one for the outer colour, one the inner, and one to control the transition between inner and outer as the flower grows:
+
+![Growth](../project_images/flowergrow2.png?raw=true "Growth")
+
+The bDNA is translated one 4 bit codon at a time, each codon coding for a digital 'acid' - the acids are then joined to make a digital 'protein' - the properties of the proteins determine the colours and growth parameters.
+
+```
+class Dna extends ListBase<bool> {
+
+  final BitList sequence;
+
+  List<Protein> decode() {
+    List<Protein> proteins = new List();
+    int i = 0;
+    Protein p = new Protein();
+    CodonIterator iter = codonIterator;
+    while (iter.moveNext()) {
+      p.acids[i] = iter.current.decode();
+      i++;
+      if (i == Protein.length) {
+        proteins.add(p);
+        i = 0;
+        p = new Protein();
+      }
+    }
+    return proteins;
+  }
+  
+  Iterator<Codon> get codonIterator {
+    return new CodonIterator(this);
+  }
+  ...
+}
+```
+### Breeding
+
+By interchanging fragments of bDNA between two flowers, offspring may share traits from their parents:
+
+
+List<Dna> breed(Random rng, List<Dna> a, List<Dna> b) {
+
+  List<Dna> result = new List(a.length);
+  int crosscheck = 0;
+  for (int i = 0; i < a.length; i++) {
+    int x = rng.nextInt(100);
+    if (x < 40) {
+      result[i] = a[i];
+    } else if (x < 80) {
+      result[i] = b[i];
+      crosscheck++;
+    } else {
+      result[i] = intermingle(rng, a[i], b[i]);
+      crosscheck = a.length + 1;
+    }
+  }
+  
+  // prevent all a
+  if ( crosscheck == 0 ) {
+    int i = rng.nextInt(a.length);
+    result[i] = b[i];
+  }
+  
+  // prevent all b
+  if ( crosscheck == a.length ) {
+    int i = rng.nextInt(a.length);
+    result[i] = a[i];
+  }
+
+  // mutate
+  if (rng.nextInt(100) < 10) {
+    int i = rng.nextInt(result.length);
+    result[i] = mutate(rng, result[i]);
+  }
+
+  // swap
+  if (rng.nextInt(100) < 10) {
+    int i = rng.nextInt(result.length);
+    int j = rng.nextInt(result.length);
+    Dna x = result[i];
+    result[i] = result[j];
+    result[j] = x;
+  }
+
+  return result;
+}
+
+### Simulation
+
+This animation simulates a population of flowers, pollinated at random:
+
+
+
+### User Interface
+
+The simplest UI would have the population projected onto a screen, with tablets allowing visitors to make their selections. However, a more ambitious approach would use pedastals - 'flower pots' - laid out in the gallery. Each visitor would be given an RFID card that they tap against their two chosen parent flowers, before tapping on one (or more!) empty pots to grow their flowers. The history of the population would be projected onto screens:
+
+Visitors become 'worker bees', pollinating this population of flowers as it grows and evolves. 
+
 
