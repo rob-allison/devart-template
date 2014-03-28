@@ -108,7 +108,7 @@ A Dart cmd line app is also provided at https://github.com/rob-allison/devart-te
 
 The simplest UI would have the population projected onto a screen, with tablets allowing visitors to make their selections. However, a more ambitious approach would use pedastals - 'flower pots' - laid out in the gallery. The top of the pedastal would display the flower as it grows, whilst its sides would show the bDNA.
 
-Each visitor would be given an RFID card that they tap against their two chosen parent flowers, before tapping on one (or more!) empty pots to grow their flowers. The history of the population would be projected onto screens:
+Each visitor would be given an RFID card that they tap against two chosen parent flowers, before tapping on one (or more!) empty pots to grow their flowers. The history of the population could be projected onto screens:
 
 ![Population](project_images/froom4.png?raw=true "Population")
 
