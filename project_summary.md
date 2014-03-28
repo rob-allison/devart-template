@@ -32,6 +32,7 @@ class Dna extends ListBase<bool> {
 
   final BitList sequence;
 
+  // iterate codon by codon, building acids and appending to proteins
   List<Protein> decode() {
     List<Protein> proteins = new List();
     int i = 0;
@@ -49,6 +50,7 @@ class Dna extends ListBase<bool> {
     return proteins;
   }
   
+  // returns an iterator that treats the bDNA as a sequence of 4-bit codons 
   Iterator<Codon> get codonIterator {
     return new CodonIterator(this);
   }
