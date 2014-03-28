@@ -21,7 +21,7 @@ This imagery is built up of over-sized pixels or blocks of colour, there is no a
 
 Three strands of bDNA, or chromosomes, are used to define each flower - one for the outer colour, one the inner, and one to control the transition between inner and outer as the flower grows:
 
-![Growth](../project_images/flowergrow2.png?raw=true "Growth")
+![Growth](project_images/flowergrow2.png?raw=true "Growth")
 
 The bDNA is translated one 4 bit codon at a time, each codon coding for a digital 'acid' - the acids are then joined to make a digital 'protein' - the properties of the proteins determine the colours and growth parameters.
 
@@ -57,7 +57,7 @@ class Dna extends ListBase<bool> {
 
 By interchanging fragments of bDNA between two flowers, offspring may share traits from their parents:
 
-![Breeding](../project_images/breed4.png?raw=true "Breeding")
+![Breeding](project_images/breed4.png?raw=true "Breeding")
 
 ```
 List<Dna> breed(Random rng, List<Dna> a, List<Dna> b) {
@@ -118,7 +118,7 @@ This animation simulates a population of flowers, pollinated at random:
 
 The simplest UI would have the population projected onto a screen, with tablets allowing visitors to make their selections. However, a more ambitious approach would use pedastals - 'flower pots' - laid out in the gallery. Each visitor would be given an RFID card that they tap against their two chosen parent flowers, before tapping on one (or more!) empty pots to grow their flowers. The history of the population would be projected onto screens:
 
-![Population](../project_images/froom4.png?raw=true "Population")
+![Population](project_images/froom4.png?raw=true "Population")
 
 Visitors become 'worker bees', pollinating this population of flowers as it grows and evolves. 
 
