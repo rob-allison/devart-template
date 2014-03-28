@@ -21,7 +21,9 @@ This imagery is built up of over-sized pixels or blocks of colour, there is no a
 
 Three strands of bDNA, or chromosomes, are used to define each flower - one for the outer colour, one the inner, and one to control the transition between inner and outer as the flower grows:
 
-![Growth](project_images/flowergrow2.png?raw=true "Growth")
+![Growth](project_images/flowergrow3.png?raw=true "Growth")
+
+https://www.youtube.com/watch?v=TEU08z6RXc4
 
 The bDNA is translated one 4 bit codon at a time, each codon coding for a digital 'acid' - the acids are then joined to make a digital 'protein' - the properties of the proteins determine the colours and growth parameters.
 
@@ -62,40 +64,26 @@ By interchanging fragments of bDNA between two flowers, offspring may share trai
 ```
 List<Dna> breed(Random rng, List<Dna> a, List<Dna> b) {
 
+  // interchange 40% from a, 40% from b, 20% from both
   List<Dna> result = new List(a.length);
-  int crosscheck = 0;
   for (int i = 0; i < a.length; i++) {
     int x = rng.nextInt(100);
     if (x < 40) {
       result[i] = a[i];
     } else if (x < 80) {
       result[i] = b[i];
-      crosscheck++;
     } else {
       result[i] = intermingle(rng, a[i], b[i]);
-      crosscheck = a.length + 1;
     }
   }
   
-  // prevent all a
-  if ( crosscheck == 0 ) {
-    int i = rng.nextInt(a.length);
-    result[i] = b[i];
-  }
-  
-  // prevent all b
-  if ( crosscheck == a.length ) {
-    int i = rng.nextInt(a.length);
-    result[i] = a[i];
-  }
-
-  // mutate
+  // mutate 10% of the time
   if (rng.nextInt(100) < 10) {
     int i = rng.nextInt(result.length);
     result[i] = mutate(rng, result[i]);
   }
 
-  // swap
+  // swap 10% of the time
   if (rng.nextInt(100) < 10) {
     int i = rng.nextInt(result.length);
     int j = rng.nextInt(result.length);
