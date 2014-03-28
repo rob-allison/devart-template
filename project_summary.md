@@ -4,9 +4,9 @@
 * Robert Allison - http://github.com/rob-allison
 
 ### Proposal
-By using a kind of binary DNA (bDNA) to create individual colours I can treat colour as the expression of a process. Previous experimentation can be found [here](http://www.robertallison.co.uk "Robert Allison").
+By using a kind of binary DNA (bDNA) I can treat colour as the expression of a process. Previous experimentation can be found [here](http://www.robertallison.co.uk "Robert Allison").
 
-I propose to create digital flowers, using bDNA as input. There would be a population of such flowers. Visitors would be able to select flowers to breed together and the resulting offspring would be added to the population. Flowers would have a lifespan, and would be removed after a certain time. During the course of the exhibition the nature of this flower population will shift and change as a result of this visitor directed pollination.
+I propose to create digital flowers, 'grown' from bDNA. There would be a population of such flowers. Visitors would be able to select flowers to breed together and the resulting offspring would be added to the population. Flowers would have a lifespan, and would be removed after a certain time. During the course of the exhibition the nature of this flower population will shift and change as a result of this visitor directed pollination.
 
 The proposal will explore:
 * growth - how a simple genetic sequence is translated into a complex structure.
@@ -57,7 +57,9 @@ class Dna extends ListBase<bool> {
 
 By interchanging fragments of bDNA between two flowers, offspring may share traits from their parents:
 
+![Breeding](../project_images/breed4.png?raw=true "Breeding")
 
+```
 List<Dna> breed(Random rng, List<Dna> a, List<Dna> b) {
 
   List<Dna> result = new List(a.length);
@@ -104,6 +106,7 @@ List<Dna> breed(Random rng, List<Dna> a, List<Dna> b) {
 
   return result;
 }
+```
 
 ### Simulation
 
@@ -114,6 +117,8 @@ This animation simulates a population of flowers, pollinated at random:
 ### User Interface
 
 The simplest UI would have the population projected onto a screen, with tablets allowing visitors to make their selections. However, a more ambitious approach would use pedastals - 'flower pots' - laid out in the gallery. Each visitor would be given an RFID card that they tap against their two chosen parent flowers, before tapping on one (or more!) empty pots to grow their flowers. The history of the population would be projected onto screens:
+
+![Population](../project_images/froom3.png?raw=true "Population")
 
 Visitors become 'worker bees', pollinating this population of flowers as it grows and evolves. 
 
