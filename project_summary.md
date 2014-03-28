@@ -21,7 +21,7 @@ This imagery is built up of over-sized pixels or blocks of colour, there is no a
 
 Three strands of bDNA, or chromosomes, are used to define each flower - one for the outer colour, one the inner, and one to control the transition between inner and outer as the flower grows:
 
-![Growth](project_images/flowergrow3.png?raw=true "Growth")
+![Growth](project_images/flowergrow4.png?raw=true "Growth")
 
 https://www.youtube.com/watch?v=TEU08z6RXc4
 
