@@ -102,6 +102,8 @@ This animation simulates a population of flowers, pollinated at random:
 
 http://youtu.be/B_uH1Exdfhw
 
+A Dart cmd line app is also provided at https://github.com/rob-allison/devart-template/blob/master/project_code/bloom/bin/cmdlinepop.dart
+
 ### User Interface
 
 The simplest UI would have the population projected onto a screen, with tablets allowing visitors to make their selections. However, a more ambitious approach would use pedastals - 'flower pots' - laid out in the gallery. The top of the pedastal would display the flower as it grows, whilst its sides would show the bDNA.
