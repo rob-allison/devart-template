@@ -100,7 +100,7 @@ List<Dna> breed(Random rng, List<Dna> a, List<Dna> b) {
 
 This animation simulates a population of flowers, pollinated at random:
 
-
+http://youtu.be/B_uH1Exdfhw
 
 ### User Interface
 
