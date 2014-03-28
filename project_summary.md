@@ -6,7 +6,7 @@
 ### Proposal
 By using a kind of binary DNA (bDNA) I can treat colour as the expression of a process. Previous experimentation can be found [here](http://www.robertallison.co.uk "Robert Allison").
 
-I propose to create digital flowers, 'grown' from bDNA. There would be a population of such flowers. Visitors would be able to select flowers to breed together and the resulting offspring would be added to the population. Flowers would have a lifespan, and would be removed after a certain time. During the course of the exhibition the nature of this flower population will shift and change as a result of this visitor directed pollination.
+I propose to create digital flowers, 'grown' from bDNA. There would be a population of such flowers. Visitors would be able to select flowers to breed together and the resulting offspring would be added to the population. Flowers would have a lifespan, and would 'die' after a certain time. During the course of the exhibition the nature of this flower population will shift and change as a result of visitor directed pollination.
 
 The proposal will explore:
 * growth - how a simple genetic sequence is translated into a complex structure.
@@ -15,7 +15,7 @@ The proposal will explore:
 
 I hope to draw a parallel between DNA and source code, and to show how something almost natural can emerge from the purely computational when iterated to sufficient scale.
 
-This imagery is built up of over-sized pixels or blocks of colour, there is no anti-aliasing or similar attempts to coerce the digital medium into the smoothness of the analogue. It's essential discrete, pixelated, nature is celebrated, not hidden.
+This imagery is built up of over-sized pixels or blocks of colour, there is no anti-aliasing or similar attempts to coerce the digital medium into the smoothness of the analogue. It's essential discrete - pixelated - nature is celebrated, not hidden.
 
 ### Growth
 
