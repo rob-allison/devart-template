@@ -3,8 +3,9 @@ import 'package:image/image.dart';
 import 'dart:math';
 import 'dart:io';
 
-main() {
+main(List<String> args) {
   
+  String dir = args[0];
   Random rng = new Random();
   Simulator sim = new Simulator(rng,5,5,20);
   sim.initialise(12);
@@ -21,7 +22,7 @@ main() {
         sim.pollinate( em[rng.nextInt(em.length)]);
       }
     }
-    write( sim.render(), i, "sim5");
+    write( sim.render(), i, dir);
   }
 }
 
@@ -37,5 +38,5 @@ void write(Image im, int i, String dir) {
   if (i < 1000) {
     istr = "0" + istr;
   }
-  new File("/home/rob/$dir/img$istr.png")..writeAsBytesSync(png);
+  new File("$dir/img$istr.png")..writeAsBytesSync(png);
 }

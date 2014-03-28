@@ -199,24 +199,6 @@ Dna mutate(Random rng, Dna dna) {
   return result;
 }
 
-Dna smallmutate(Random rng, Dna dna) {
-  Dna result = dna.copy();
-  int n = rng.nextInt(20);
-  int w = rng.nextInt(5) + 1;
-  for (int i = 0; i < result.length; i++) {
-    if (i > n - w) {
-      result[i] = !result[i];
-    }
-
-    if (i == n) {
-      n = n + rng.nextInt(20) + 1;
-      w = rng.nextInt(5) + 1;
-    }
-  }
-  return result;
-}
-
-
 Dna intermingle(Random rng, Dna a, Dna b) {
 
   int window = 20;

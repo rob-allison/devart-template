@@ -3,22 +3,26 @@ import 'package:image/image.dart';
 import 'dart:math';
 import 'dart:io';
 
-main() {
+main(List<String> args) {
 
+  String dir = args[0];
   Random rng = new Random();
   RandomDna rdna = new RandomDna(rng, 512);
+  
+  print("creating initial population...");
   List<List<Dna>> dnas = new List();
   int f = 0;
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 10; i++) {
     List<Dna> dna = [rdna.build(), rdna.build(), rdna.build()];
-    grow(rng, dna, f++);
+    grow(rng, dna, f++, dir);
     dnas.add(dna);
   }
-  /*
-  print("ready");
+
+  print("now grow your own:");
   int a = 0;
   int b = 1;
   int s = 0;
+  print("enter parent# 0-" + (dnas.length - 1).toString());
   String line = stdin.readLineSync(retainNewlines: false);
   while (line != "q") {
 
@@ -29,45 +33,31 @@ main() {
         }
         s = 1;
         break;
-        
+
       case 1:
         if (line != "") {
           b = int.parse(line);
         }
         List<Dna> dna = breed(rng, dnas[a], dnas[b]);
-        grow(rng, dna, f++);
+        grow(rng, dna, f++, dir);
         dnas.add(dna);
         s = 0;
+        print("child grown.");
         break;
     }
 
+    print("enter parent# 0-" + (dnas.length - 1).toString());
     line = stdin.readLineSync(retainNewlines: false);
   }
-*/
-
-
-
-  for (int i = 0; i < 200; i++) {
-    int a = dnas.length - rng.nextInt(min(dnas.length,60)) - 1;
-    int b = dnas.length - rng.nextInt(min(dnas.length,60)) - 1;
-    List<Dna> dna = breed(rng, dnas[a], dnas[b]);
-    grow(rng, dna, f++);
-    dnas.add(dna);
-  }
-
 }
 
-void grow(Random rng, List<Dna> dna, int f) {
+void grow(Random rng, List<Dna> dna, int f, String dir) {
 
-  print( f.toString() + " " + dna.toString() );
   Flower flower = new Flower.start(rng, dna);
   for (int i = 0; i < 64; i++) {
-    new Directory("/home/rob/grow3/flower$f").create();
-    renderFlower(flower, i, "grow3/flower$f");
     flower = flower.grow();
   }
-  renderFlower(flower, f, "flowers3");
-  renderDna(flower, f, "dna3");
+  renderFlower(flower, f, dir);
 }
 
 renderDna(Flower flower, int i, String dir) {
@@ -90,6 +80,5 @@ void write(Image im, int i, String dir) {
   if (i < 100) {
     istr = "0" + istr;
   }
-  new File("/home/rob/$dir/img$istr.png")..writeAsBytesSync(png);
+  new File("$dir/img$istr.png")..writeAsBytesSync(png);
 }
-
